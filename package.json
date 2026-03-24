@@ -1,0 +1,13 @@
+{
+  "name": "parcial-proyecto-construccion-software",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev:frontend",
+    "dev:frontend": "npm --prefix pro-connect/frontend run dev",
+    "dev:backend": "npm --prefix pro-connect/backend run start:dev",
+    "seed": "npm --prefix pro-connect/backend run seed",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "npm --prefix pro-connect/frontend run build",
+    "build:backend": "npm --prefix pro-connect/backend run build"
+  }
+}

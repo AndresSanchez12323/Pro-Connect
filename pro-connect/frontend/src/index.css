@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  
+  --animate-fade-in-up: fade-in-up 0.5s ease-out;
+  --animate-pulse-slow: pulse-slow 3s infinite;
+  
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-slow {
+     0%, 100% { opacity: 1; }
+     50% { opacity: 0.8; }
+  }
+}
+
+@layer base {
+  :root {
+    /* Futuristic Green/Black Theme (Matrix/Cyberpunk) */
+    --background: 140 30% 2%; /* Deep Black Green #020602 */
+    --foreground: 0 0% 90%; /* Light Gray */
+    
+    --card: 140 30% 4%; /* Slightly lighter black-green */
+    --card-foreground: 0 0% 90%;
+    
+    --popover: 140 30% 4%;
+    --popover-foreground: 0 0% 90%;
+    
+    --primary: 125 100% 50%; /* Pure Neon Green #00FF15 */
+    --primary-foreground: 0 0% 0%; /* Black text on neon */
+    
+    --secondary: 140 20% 12%; /* Dark Greenish Gray */
+    --secondary-foreground: 125 100% 50%;
+    
+    --muted: 140 20% 10%;
+    --muted-foreground: 125 40% 40%;
+    
+    --accent: 125 100% 50%; /* Neon Green Accent */
+    --accent-foreground: 0 0% 0%;
+    
+    --destructive: 0 80% 40%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 125 60% 15%; /* Dark Green Border */
+    --input: 125 40% 10%;
+    --ring: 125 100% 50%;
+    
+    --radius: 0.1rem; /* Sharp corners for tech look */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30 selection:text-primary;
+  }
+}
+
+/* Futuristic Card */
+.minimal-card {
+  @apply bg-card text-card-foreground border border-primary/20 rounded-sm shadow-[0_0_10px_rgba(0,255,21,0.05)] hover:shadow-[0_0_15px_rgba(0,255,21,0.15)] hover:border-primary/50 transition-all duration-300 backdrop-blur-md relative overflow-hidden;
+}
+
+/* Gradient Text Support */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600;
+}
+
+/* Utility for neon glow text */
+.text-shadow-neon {
+  text-shadow: 0 0 5px rgba(0, 255, 21, 0.5), 0 0 10px rgba(0, 255, 21, 0.3);
+}
+
+
