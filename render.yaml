@@ -6,12 +6,10 @@ services:
     plan: free
     buildCommand: npm ci && npm run build
     startCommand: npm run start:prod
-    healthCheckPath: /api
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 3002
       - key: FRONTEND_URL
         sync: false
       - key: DATABASE_URL
