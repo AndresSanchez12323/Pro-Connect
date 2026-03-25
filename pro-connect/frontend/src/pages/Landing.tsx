@@ -6,16 +6,16 @@ export default function Landing() {
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-black font-sans">
       {/* Navbar */}
       <nav className="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="text-2xl font-bold tracking-tighter bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2">
-            <Network className="w-8 h-8 text-primary" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+          <div className="text-xl sm:text-2xl font-bold tracking-tighter bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2">
+            <Network className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             ProConnect<span className="text-primary">.</span>
           </div>
-          <div className="flex gap-4">
-            <Link to="/login" className="px-6 py-2 rounded-sm text-sm font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-all font-mono">
+          <div className="flex gap-2 sm:gap-4">
+            <Link to="/login" className="px-3 sm:px-6 py-2 rounded-sm text-xs sm:text-sm font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-all font-mono">
               INICIAR SESIÓN
             </Link>
-            <Link to="/register" className="px-6 py-2 rounded-sm bg-primary text-black text-sm font-bold hover:bg-green-400 transition-all font-mono tracking-wide shadow-[0_0_15px_rgba(0,255,21,0.3)]">
+            <Link to="/register" className="px-3 sm:px-6 py-2 rounded-sm bg-primary text-black text-xs sm:text-sm font-bold hover:bg-green-400 transition-all font-mono tracking-wide shadow-[0_0_15px_rgba(0,255,21,0.3)]">
               REGISTRARSE
             </Link>
           </div>
@@ -23,28 +23,28 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative pt-32 pb-20 overflow-hidden">
+      <div className="relative pt-24 sm:pt-32 pb-14 sm:pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,21,0.1),transparent_70%)]"></div>
         
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
-          <div className="space-y-8 animate-fade-in-up">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center relative z-10">
+          <div className="space-y-6 sm:space-y-8 animate-fade-in-up">
             <div className="inline-block px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold tracking-widest font-mono">
               SISTEMA_LISTO_V2.0
             </div>
-            <h1 className="text-5xl lg:text-7xl font-black tracking-tighter leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black tracking-tighter leading-tight">
               CONECTA CON <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600 text-shadow-neon">TALENTO DE ÉLITE</span>
             </h1>
-            <p className="text-xl text-gray-400 max-w-lg leading-relaxed font-light">
+            <p className="text-base sm:text-xl text-gray-400 max-w-lg leading-relaxed font-light">
               La red neuronal para profesionales de próxima generación. Contrata expertos de primer nivel o monetiza tus habilidades en un ecosistema descentralizado.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-               <Link to="/register?role=client" className="group px-8 py-4 bg-primary text-black font-bold rounded-sm flex items-center justify-center gap-2 hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(0,255,21,0.4)]">
+               <Link to="/register?role=client" className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-primary text-black font-bold rounded-sm flex items-center justify-center gap-2 hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(0,255,21,0.4)] text-sm sm:text-base">
                  <Zap className="w-5 h-5 fill-black" />
                  CONTRATAR EXPERTOS
                </Link>
-               <Link to="/register?role=professional" className="px-8 py-4 bg-transparent border border-white/20 text-white font-bold rounded-sm flex items-center justify-center gap-2 hover:bg-white/5 hover:border-white/40 transition-all">
+               <Link to="/register?role=professional" className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-transparent border border-white/20 text-white font-bold rounded-sm flex items-center justify-center gap-2 hover:bg-white/5 hover:border-white/40 transition-all text-sm sm:text-base">
                  <Briefcase className="w-5 h-5 text-primary" />
                  OFRECER SERVICIOS
                </Link>
@@ -53,8 +53,8 @@ export default function Landing() {
           
           <div className="relative">
              <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-emerald-500/20 rounded-xl blur-3xl opacity-50"></div>
-             <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-8 shadow-2xl">
-                <div className="grid grid-cols-2 gap-4">
+             <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-5 sm:p-8 shadow-2xl">
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                    <div className="space-y-4">
                       <div className="h-40 bg-zinc-900/50 rounded-lg border border-white/5 p-4 flex flex-col justify-end">
                          <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center mb-2">

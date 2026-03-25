@@ -52,16 +52,16 @@ export default function ClientServiceCheckout() {
         <ArrowLeft className="w-4 h-4" /> CANCELAR
       </Link>
 
-      <div className="minimal-card p-8 border-l-4 border-l-blue-500 max-w-3xl mx-auto">
-        <div className="flex justify-between items-start mb-8 border-b border-white/5 pb-8">
+      <div className="minimal-card p-5 sm:p-8 border-l-4 border-l-blue-500 max-w-3xl mx-auto">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-start mb-6 sm:mb-8 border-b border-white/5 pb-6 sm:pb-8">
           <div>
             <h2 className="text-xl font-bold text-white mb-2 font-mono uppercase">Confirmar Contratacion</h2>
             <p className="text-gray-400 font-mono text-sm">Contrato inteligente vinculado a reserva</p>
           </div>
-          <Shield className="w-12 h-12 text-blue-500 opacity-50" />
+          <Shield className="w-10 h-10 sm:w-12 sm:h-12 text-blue-500 opacity-50" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
           <div className="space-y-4">
             <h3 className="text-sm font-bold text-gray-500 font-mono uppercase border-b border-white/5 pb-2">Profesional</h3>
             <div className="flex items-center gap-4">

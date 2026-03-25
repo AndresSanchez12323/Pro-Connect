@@ -97,7 +97,7 @@ export default function Register() {
           </div>
         </div>
 
-        <div className="p-8 relative">
+        <div className="p-5 sm:p-8 relative">
           <h2 className="text-xl font-bold text-white mb-6 font-mono text-center md:text-left">CREAR_CUENTA</h2>
 
           <div className="flex bg-black p-1 rounded-sm border border-white/10 mb-8">
@@ -118,7 +118,7 @@ export default function Register() {
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-gray-500 uppercase">Nombre</label>
                 <input
@@ -164,7 +164,7 @@ export default function Register() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-gray-500 uppercase">Nacimiento</label>
                 <input

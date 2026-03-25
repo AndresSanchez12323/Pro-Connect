@@ -1,4 +1,4 @@
-import { Bell, Home, MessageSquare, Search, User, Briefcase, Settings, LogOut, ReceiptText } from 'lucide-react';
+import { Bell, Home, Menu, MessageSquare, Search, User, Briefcase, Settings, LogOut, ReceiptText, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { clearSession, getSession } from '../../lib/session';
@@ -13,6 +13,7 @@ export default function Navbar() {
   const basePath = isProfessional ? '/dashboard/professional' : '/dashboard/client';
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { id: 'overview', icon: Home, label: 'Inicio', path: `${basePath}/overview` },
@@ -29,6 +30,8 @@ export default function Navbar() {
     clearSession();
     navigate('/login');
   };
+
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   useEffect(() => {
     let active = true;
@@ -101,6 +104,13 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="md:hidden text-gray-300 hover:text-primary transition-colors p-2 rounded-md hover:bg-white/5"
+              title="Abrir menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
             <div className="text-right hidden lg:block">
               <p className="text-sm font-medium text-gray-100 leading-none">{session?.user.fullName ?? 'Usuario'}</p>
               <p className="text-[11px] text-gray-400 mt-1">{traducirRol(session?.user.role ?? 'VISITANTE')}</p>
@@ -110,6 +120,41 @@ export default function Navbar() {
             </button>
           </div>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden pb-4 border-t border-white/10 pt-3">
+            <div className="grid grid-cols-2 gap-2">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path}
+                    onClick={closeMobileMenu}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-colors whitespace-nowrap ${
+                      isActive ? 'bg-primary/15 text-primary border border-primary/30' : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <span className="relative inline-flex">
+                      <item.icon className="w-4 h-4" />
+                      {item.id === 'messages' && unreadMessages > 0 && (
+                        <span className="absolute -top-2 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] leading-4 text-center">
+                          {unreadMessages}
+                        </span>
+                      )}
+                      {item.id === 'notifications' && unreadNotifications > 0 && (
+                        <span className="absolute -top-2 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-amber-500 text-black text-[10px] leading-4 text-center">
+                          {unreadNotifications}
+                        </span>
+                      )}
+                    </span>
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

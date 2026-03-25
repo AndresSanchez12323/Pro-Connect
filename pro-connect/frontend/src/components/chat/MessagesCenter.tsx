@@ -209,15 +209,15 @@ export default function MessagesCenter({ title }: { title: string }) {
   }, [conversations, filter]);
 
   return (
-    <div className="space-y-6 h-[calc(100vh-140px)] flex flex-col">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-4 sm:space-y-6 h-[calc(100vh-120px)] md:h-[calc(100vh-140px)] flex flex-col">
+      <div className="flex justify-between items-center mb-2 sm:mb-6">
         <h2 className="text-xl font-bold text-white font-mono flex items-center gap-2">
           <MessageCircle className="w-5 h-5 text-primary" /> {title}
         </h2>
       </div>
 
-      <div className="minimal-card flex-1 flex overflow-hidden border border-white/5 rounded-sm">
-        <div className="w-1/3 border-r border-white/5 flex flex-col bg-black/50">
+      <div className="minimal-card flex-1 flex flex-col md:flex-row overflow-hidden border border-white/5 rounded-sm">
+        <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-white/5 flex flex-col bg-black/50 max-h-64 md:max-h-none">
           <div className="p-4 border-b border-white/5">
             <div className="relative">
               <input
@@ -256,20 +256,20 @@ export default function MessagesCenter({ title }: { title: string }) {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col bg-zinc-950/30">
+        <div className="flex-1 flex flex-col bg-zinc-950/30 min-h-0">
           <div className="p-4 border-b border-white/5 bg-black/40">
             <h4 className="text-sm font-bold text-white font-mono">
               {conversations.find((item) => item.reservationId === selectedReservationId)?.peer?.fullName ?? 'Selecciona una conversación'}
             </h4>
           </div>
 
-          <div className="flex-1 p-6 overflow-y-auto space-y-4">
+          <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
             {messages.length === 0 ? (
               <div className="text-xs text-gray-500 font-mono">No hay mensajes en este chat. Escribe el primero.</div>
             ) : (
               messages.map((msg) => (
                 <div key={msg.id} className={`flex ${msg.senderId === userId ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`${msg.senderId === userId ? 'bg-primary/10 border-primary/20' : 'bg-zinc-800/50 border-white/5'} p-3 rounded-lg max-w-[80%] border`}>
+                  <div className={`${msg.senderId === userId ? 'bg-primary/10 border-primary/20' : 'bg-zinc-800/50 border-white/5'} p-3 rounded-lg max-w-[88%] sm:max-w-[80%] border`}>
                     <p className="text-xs text-gray-200">{msg.content}</p>
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function MessagesCenter({ title }: { title: string }) {
 
           <div className="p-4 border-t border-white/5 bg-black/40">
             {error && <p className="text-red-400 text-xs font-mono mb-2">{error}</p>}
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={text}
@@ -297,7 +297,7 @@ export default function MessagesCenter({ title }: { title: string }) {
               <button
                 onClick={() => void handleSend()}
                 disabled={!selectedReservationId || sending || !text.trim()}
-                className="bg-primary hover:bg-green-400 text-black font-bold px-6 rounded-sm transition-colors text-xs font-mono disabled:opacity-50"
+                className="bg-primary hover:bg-green-400 text-black font-bold px-6 py-3 rounded-sm transition-colors text-xs font-mono disabled:opacity-50 w-full sm:w-auto"
               >
                 {sending ? 'ENVIANDO...' : 'ENVIAR'}
               </button>

@@ -46,7 +46,7 @@ export default function ProfessionalCreateService() {
         <ArrowLeft className="w-4 h-4" /> VOLVER
       </Link>
 
-      <div className="minimal-card p-8 border-l-4 border-l-primary">
+      <div className="minimal-card p-5 sm:p-8 border-l-4 border-l-primary">
         <h2 className="text-xl font-bold text-white mb-6 font-mono uppercase">Crear Nuevo Servicio</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
@@ -71,7 +71,7 @@ export default function ProfessionalCreateService() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-400 font-mono">PRECIO</label>
               <input
