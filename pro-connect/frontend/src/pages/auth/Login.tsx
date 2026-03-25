@@ -35,7 +35,7 @@ export default function Login() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#0a0a0a_1px,transparent_1px),linear-gradient(to_bottom,#0a0a0a_1px,transparent_1px)] bg-[size:2rem_2rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none"></div>
 
-      <div className="w-full max-w-md bg-zinc-950 border border-white/10 rounded-xl p-8 shadow-2xl relative z-10 animate-fade-in-up">
+      <div className="w-full max-w-md bg-zinc-950 border border-white/10 rounded-xl p-5 sm:p-8 shadow-2xl relative z-10 animate-fade-in-up">
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-4">
             <h1 className="text-2xl font-bold tracking-tighter bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">

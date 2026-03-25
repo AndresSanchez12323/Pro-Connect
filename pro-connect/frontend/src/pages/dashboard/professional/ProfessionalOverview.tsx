@@ -34,8 +34,8 @@ export default function ProfessionalOverview() {
 
   return (
     <div className="space-y-6">
-      <div className="minimal-card p-6 border border-white/10">
-        <h1 className="text-2xl font-semibold text-white mb-1">Panel profesional de {session?.user.fullName ?? 'Profesional'}</h1>
+      <div className="minimal-card p-5 sm:p-6 border border-white/10">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white mb-1 break-words">Panel profesional de {session?.user.fullName ?? 'Profesional'}</h1>
         <p className="text-sm text-gray-400">Gestiona servicios, trabajos y comunicación en módulos separados.</p>
       </div>
 
@@ -75,8 +75,8 @@ export default function ProfessionalOverview() {
         </Link>
       </div>
 
-      <div className="minimal-card p-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="minimal-card p-5 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <CalendarDays className="w-5 h-5 text-primary" /> Últimos trabajos
           </h2>
@@ -98,8 +98,8 @@ export default function ProfessionalOverview() {
         )}
       </div>
 
-      <div className="minimal-card p-4 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-gray-300">
+      <div className="minimal-card p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-start sm:items-center gap-2 text-sm text-gray-300">
           <Bell className="w-4 h-4 text-primary" /> Recordatorio: revisa tus mensajes antes de cada sesión.
         </div>
         <Link to="/dashboard/professional/messages" className="text-xs px-3 py-1 rounded-md border border-primary/30 text-primary hover:bg-primary/10">

@@ -33,7 +33,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-zinc-950 border border-white/10 rounded-xl p-8 space-y-6">
+      <div className="w-full max-w-md bg-zinc-950 border border-white/10 rounded-xl p-5 sm:p-8 space-y-6">
         <h1 className="text-xl font-bold text-white">Recuperar contraseña</h1>
 
         <form onSubmit={requestCode} className="space-y-3">

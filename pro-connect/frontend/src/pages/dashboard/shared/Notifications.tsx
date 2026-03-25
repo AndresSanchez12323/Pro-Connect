@@ -39,7 +39,7 @@ export default function Notifications() {
       ) : (
         <div className="space-y-3">
           {notifications.map((notif) => (
-            <div key={notif.id} className="minimal-card p-4 flex gap-4 border border-white/10">
+            <div key={notif.id} className="minimal-card p-4 flex gap-3 sm:gap-4 border border-white/10">
               <div className={`p-2 rounded-full h-fit mt-1 ${
                 notif.type.includes('CREATED') ? 'bg-green-500/10 text-green-500' :
                 notif.type.includes('CANCELLED') ? 'bg-yellow-500/10 text-yellow-500' :
@@ -50,11 +50,11 @@ export default function Notifications() {
                  <Clock className="w-4 h-4" />}
               </div>
               <div className="flex-1">
-                <div className="flex justify-between items-start gap-3">
-                  <h3 className="text-sm font-medium text-white">{notif.title}</h3>
-                  <span className="text-[10px] text-gray-500">{new Date(notif.createdAt).toLocaleString()}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-3">
+                  <h3 className="text-sm font-medium text-white break-words">{notif.title}</h3>
+                  <span className="text-[10px] text-gray-500 break-words">{new Date(notif.createdAt).toLocaleString()}</span>
                 </div>
-                <p className="text-sm text-gray-400 mt-1">{notif.message}</p>
+                <p className="text-sm text-gray-400 mt-1 break-words">{notif.message}</p>
                 {!notif.isRead && (
                   <button onClick={() => void markAsRead(notif.id)} className="mt-3 text-xs px-3 py-1 rounded-md border border-primary/30 text-primary hover:bg-primary/10">
                     Marcar como leída

@@ -80,13 +80,13 @@ export default function ProfessionalNetwork() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {jobs.map((job) => (
-            <div key={job.id} className="minimal-card p-6 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
-              <div className="flex items-start justify-between gap-4">
+            <div key={job.id} className="minimal-card p-5 sm:p-6 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div>
-                  <h3 className="text-sm font-bold text-white font-mono uppercase">{job.service?.name ?? 'Servicio'}</h3>
-                  <p className="text-xs text-gray-500 font-mono">Cliente: {job.client?.fullName ?? 'Sin nombre'}</p>
-                  <p className="text-xs text-gray-500 font-mono">{job.client?.email ?? ''}</p>
-                  <div className="mt-2 text-xs text-gray-400 font-mono flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-white font-mono uppercase break-words">{job.service?.name ?? 'Servicio'}</h3>
+                  <p className="text-xs text-gray-500 font-mono break-words">Cliente: {job.client?.fullName ?? 'Sin nombre'}</p>
+                  <p className="text-xs text-gray-500 font-mono break-all">{job.client?.email ?? ''}</p>
+                  <div className="mt-2 text-xs text-gray-400 font-mono flex flex-wrap items-center gap-2">
                     <CalendarDays className="w-4 h-4" /> {new Date(job.scheduledAt).toLocaleString()} - {traducirModalidad(job.mode)}
                   </div>
                   {job.negotiationMessage && (
@@ -100,7 +100,7 @@ export default function ProfessionalNetwork() {
                   )}
                 </div>
 
-                <div className="text-right space-y-2">
+                <div className="text-left md:text-right space-y-2 w-full md:w-auto">
                   <span className="text-[10px] text-primary border border-primary/20 bg-primary/5 px-2 py-1 rounded-sm inline-block">{traducirEstado(job.status)}</span>
                   <p className="text-xs text-gray-300 font-mono">${Number(job.service?.price ?? 0).toLocaleString()}</p>
                   <Link to={`/dashboard/professional/network/${job.id}`} className="block text-xs px-3 py-1.5 border border-primary/30 text-primary rounded hover:bg-primary/10 text-center">

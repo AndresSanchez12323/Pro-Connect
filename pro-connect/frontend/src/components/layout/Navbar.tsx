@@ -123,7 +123,7 @@ export default function Navbar() {
 
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 border-t border-white/10 pt-3">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
                 return (
@@ -131,7 +131,7 @@ export default function Navbar() {
                     key={item.id}
                     to={item.path}
                     onClick={closeMobileMenu}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-colors whitespace-nowrap ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs transition-colors ${
                       isActive ? 'bg-primary/15 text-primary border border-primary/30' : 'text-gray-300 hover:text-white hover:bg-white/5'
                     }`}
                   >

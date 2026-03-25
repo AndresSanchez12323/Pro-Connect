@@ -48,8 +48,8 @@ export default function ClientHiring() {
 
   return (
     <div className="space-y-6">
-      <div className="minimal-card p-10">
-        <h2 className="text-2xl font-bold text-white mb-6 font-mono flex items-center gap-3">
+      <div className="minimal-card p-5 sm:p-10">
+        <h2 className="text-lg sm:text-2xl font-bold text-white mb-6 font-mono flex items-center gap-3 break-words">
           <Briefcase className="w-8 h-8 text-primary" />
           REGISTRO_DE_CONTRATACIONES
         </h2>
@@ -64,21 +64,21 @@ export default function ClientHiring() {
           <div className="space-y-3">
             {reservations.map((item) => (
               <div key={item.id} className="bg-black/40 border border-white/5 p-4 rounded-sm hover:border-primary/30 transition-colors">
-                <div className="flex justify-between items-start gap-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
                   <div>
-                    <Link to={`/dashboard/client/hiring/${item.id}`} className="text-white font-bold font-mono hover:text-primary">
+                    <Link to={`/dashboard/client/hiring/${item.id}`} className="text-white font-bold font-mono hover:text-primary break-words">
                       {item.service?.name ?? 'Servicio'}
                     </Link>
-                    <p className="text-xs text-gray-500">Con: {item.professional?.fullName ?? 'Profesional'}</p>
-                    <p className="text-xs text-gray-500">{item.professional?.email ?? ''}</p>
+                    <p className="text-xs text-gray-500 break-words">Con: {item.professional?.fullName ?? 'Profesional'}</p>
+                    <p className="text-xs text-gray-500 break-all">{item.professional?.email ?? ''}</p>
                     {item.negotiationMessage && <p className="text-xs text-amber-300 mt-1">Tu mensaje: {item.negotiationMessage}</p>}
                     {item.proposedPrice && <p className="text-xs text-amber-300">Tu oferta: ${item.proposedPrice.toLocaleString()}</p>}
                     {item.counterOfferPrice && <p className="text-xs text-sky-300">Contraoferta profesional: ${item.counterOfferPrice.toLocaleString()}</p>}
                     {item.counterOfferMessage && <p className="text-xs text-sky-300">Nota: {item.counterOfferMessage}</p>}
                   </div>
-                  <span className="text-xs font-mono px-2 py-1 border border-primary/20 text-primary bg-primary/5 rounded-sm">{traducirEstado(item.status)}</span>
+                  <span className="text-xs font-mono px-2 py-1 border border-primary/20 text-primary bg-primary/5 rounded-sm self-start sm:self-auto">{traducirEstado(item.status)}</span>
                 </div>
-                <div className="mt-3 text-xs text-gray-400 font-mono flex items-center gap-2">
+                <div className="mt-3 text-xs text-gray-400 font-mono flex flex-wrap items-center gap-2">
                   <CalendarDays className="w-4 h-4" /> {new Date(item.scheduledAt).toLocaleString()} - {traducirModalidad(item.mode)}
                 </div>
                 {item.status === 'PENDING' && item.counterOfferPrice && (
