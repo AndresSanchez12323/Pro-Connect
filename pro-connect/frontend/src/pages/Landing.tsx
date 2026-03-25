@@ -6,16 +6,16 @@ export default function Landing() {
     <div className="min-h-screen bg-black text-white selection:bg-primary selection:text-black font-sans">
       {/* Navbar */}
       <nav className="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
-          <div className="text-xl sm:text-2xl font-bold tracking-tighter bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2">
-            <Network className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-0 sm:h-20 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
+          <div className="text-lg sm:text-2xl font-bold tracking-tighter bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent flex items-center gap-2 min-w-0">
+            <Network className="w-5 h-5 sm:w-8 sm:h-8 text-primary shrink-0" />
             ProConnect<span className="text-primary">.</span>
           </div>
-          <div className="flex gap-2 sm:gap-4">
-            <Link to="/login" className="px-3 sm:px-6 py-2 rounded-sm text-xs sm:text-sm font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-all font-mono">
+          <div className="w-full sm:w-auto flex gap-2 sm:gap-4 justify-end">
+            <Link to="/login" className="flex-1 sm:flex-none text-center px-3 sm:px-6 py-2 rounded-sm text-xs sm:text-sm font-bold text-gray-300 hover:text-white hover:bg-white/5 transition-all font-mono">
               INICIAR SESIÓN
             </Link>
-            <Link to="/register" className="px-3 sm:px-6 py-2 rounded-sm bg-primary text-black text-xs sm:text-sm font-bold hover:bg-green-400 transition-all font-mono tracking-wide shadow-[0_0_15px_rgba(0,255,21,0.3)]">
+            <Link to="/register" className="flex-1 sm:flex-none text-center px-3 sm:px-6 py-2 rounded-sm bg-primary text-black text-xs sm:text-sm font-bold hover:bg-green-400 transition-all font-mono tracking-wide shadow-[0_0_15px_rgba(0,255,21,0.3)]">
               REGISTRARSE
             </Link>
           </div>
