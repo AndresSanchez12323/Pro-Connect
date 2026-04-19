@@ -51,10 +51,6 @@ export class ProConnectObserver implements OnModuleInit {
     });
 
     this.bus.onChatMessage(async ({ message, receiverUserId }) => {
-// Note: payload changed in event bus implementation to match emit call in facade?
-// Facade emits: { message, reservationId, receiverUserId }
-// Bus defines: interface ChatMessageEventPayload { message, reservationId, receiverUserId }
-      
       const notification = this.notificationRepository.create({
           userId: receiverUserId,
           type: NotificationType.NEW_CHAT_MESSAGE,
@@ -75,7 +71,7 @@ export class ProConnectObserver implements OnModuleInit {
     message: string,
   ): Promise<void> {
     const professional = await this.professionalRepository.findOneBy({ id: professionalId });
-    if (!professional) return; // Should optimize
+    if (!professional) return;
 
     const notifUser = this.notificationRepository.create({ userId, type, channel, title, message });
     const notifPro = this.notificationRepository.create({ userId: professional.userId, type, channel, title, message });

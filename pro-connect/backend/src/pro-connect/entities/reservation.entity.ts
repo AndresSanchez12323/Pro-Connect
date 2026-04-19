@@ -1,10 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 import { ServiceMode, ReservationStatus } from './enums';
 import { User } from './user.entity';
 import { ProfessionalProfile } from './professional-profile.entity';
 import { Service } from './service.entity';
-// import { Invoice } from './invoice.entity';
-// import { ChatConversation } from './chat-conversation.entity';
 
 @Entity()
 @Index(['professionalId', 'scheduledAt'])
@@ -62,12 +60,6 @@ export class Reservation {
   @ManyToOne(() => Service, (service) => service.reservations, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'serviceId' })
   service: Service;
-
-  // @OneToOne(() => Invoice, (invoice) => invoice.reservation)
-  // invoice: Invoice;
-
-  // @OneToOne(() => ChatConversation, (conversation) => conversation.reservation)
-  // conversation: ChatConversation;
 
   @CreateDateColumn()
   createdAt: Date;

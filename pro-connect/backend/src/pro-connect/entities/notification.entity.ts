@@ -25,7 +25,7 @@ export class Notification {
   @Column({ type: 'timestamp', nullable: true })
   readAt: Date | null;
 
-  @ManyToOne(() => User) // Definir propiedad inversa en user si se quiere bidireccional
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   user: User;
 

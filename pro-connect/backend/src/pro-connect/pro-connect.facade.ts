@@ -107,7 +107,7 @@ export class ProConnectFacade {
     user.passwordRecoveryCodeExpiresAt = new Date(Date.now() + 1000 * 60 * 15);
     await this.userRepository.save(user);
 
-    // En un entorno real esto se enviaría por email. Se devuelve para entorno local de pruebas.
+    // En produccion el codigo se envia por correo.
     return {
       success: true,
       message: 'Código de recuperación generado.',
@@ -415,7 +415,7 @@ export class ProConnectFacade {
             experience: dto.experience,
             description: dto.description,
             contactInfo: dto.contactInfo,
-            id: dto.userId, // Usamos userId como ID si es UUID valido
+            id: dto.userId,
         });
     }
     return this.professionalRepository.save(profile);
@@ -639,7 +639,7 @@ export class ProConnectFacade {
 
   async openChat(userId: string, reservationId: string) {
     await this.getReservationForParticipant(userId, reservationId);
-    // Upsert equivalent logic
+    // Crea la conversacion si no existe para la reserva.
     const existing = await this.conversationRepository.findOneBy({ reservationId });
     if(existing) return existing;
     
@@ -659,7 +659,7 @@ export class ProConnectFacade {
     await this.messageRepository.save(message);
 
     const professional = await this.professionalRepository.findOneBy({ id: reservation.professionalId });
-    // Safe assume pro exitst if reservation exists
+    // La reserva siempre referencia un profesional valido.
     const receiverUserId = userId === reservation.userId ? professional!.userId : reservation.userId;
     
     this.eventBus.emitChatMessage({ message, reservationId: reservation.id, receiverUserId });
@@ -678,7 +678,7 @@ export class ProConnectFacade {
     if (!conversation) {
       return { reservationId, messages: [] };
     }
-    // Ordenar mensajes en memoria
+    // Mantener el historial en orden cronologico.
     conversation.messages.sort((a,b) => a.createdAt.getTime() - b.createdAt.getTime());
     return conversation;
   }
