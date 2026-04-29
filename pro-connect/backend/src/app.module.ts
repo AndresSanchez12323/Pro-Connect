@@ -11,6 +11,7 @@ import { Review } from './pro-connect/entities/review.entity';
 import { ChatConversation, ChatMessage } from './pro-connect/entities/chat.entity';
 import { Invoice } from './pro-connect/entities/invoice.entity';
 import { Notification } from './pro-connect/entities/notification.entity';
+import { FilesModule } from './files/files.module';
 
 const asBool = (value: string | undefined, fallback: boolean): boolean => {
   if (value == null) return fallback;
@@ -41,6 +42,7 @@ const asBool = (value: string | undefined, fallback: boolean): boolean => {
       logging: asBool(process.env.DB_LOGGING, false),
     }),
     ProConnectModule,
+    FilesModule,
   ],
 })
 export class AppModule {}
