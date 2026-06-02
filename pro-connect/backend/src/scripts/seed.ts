@@ -16,7 +16,7 @@ const appDataSource = new DataSource({
   password: process.env.DB_PASSWORD ?? 'postgres',
   database: process.env.DB_NAME ?? 'proconnect',
   entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification],
-  synchronize: true,
+  synchronize: false,
   logging: false,
 });
 
