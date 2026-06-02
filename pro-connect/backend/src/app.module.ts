@@ -1,17 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProConnectModule } from './pro-connect/pro-connect.module';
-import { User } from './pro-connect/entities/user.entity';
-import { ProfessionalProfile } from './pro-connect/entities/professional-profile.entity';
-import { Service } from './pro-connect/entities/service.entity';
-import { AvailabilitySlot } from './pro-connect/entities/availability-slot.entity';
-import { Reservation } from './pro-connect/entities/reservation.entity';
-import { Review } from './pro-connect/entities/review.entity';
-import { ChatConversation, ChatMessage } from './pro-connect/entities/chat.entity';
-import { Invoice } from './pro-connect/entities/invoice.entity';
-import { Notification } from './pro-connect/entities/notification.entity';
-import { FilesModule } from './files/files.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { ProfessionalsModule } from './modules/professionals/professionals.module';
+import { ServicesModule } from './modules/services/services.module';
+import { ContractsModule } from './modules/contracts/contracts.module';
+import { ChatModule } from './modules/chat/chat.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { User } from './modules/users/entities/user.entity';
+import { ProfessionalProfile } from './modules/professionals/entities/professional-profile.entity';
+import { Service } from './modules/services/entities/service.entity';
+import { Contract } from './modules/contracts/entities/contract.entity';
+import { ChatConversation, ChatMessage } from './modules/chat/entities/chat.entity';
+import { Notification } from './modules/notifications/entities/notification.entity';
 
 const asBool = (value: string | undefined, fallback: boolean): boolean => {
   if (value == null) return fallback;
@@ -37,12 +39,17 @@ const asBool = (value: string | undefined, fallback: boolean): boolean => {
       ssl: asBool(process.env.DB_SSL, false)
         ? { rejectUnauthorized: false }
         : false,
-      entities: [User, ProfessionalProfile, Service, AvailabilitySlot, Reservation, Review, ChatConversation, ChatMessage, Invoice, Notification],
+      entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification],
       synchronize: asBool(process.env.DB_SYNCHRONIZE, true),
       logging: asBool(process.env.DB_LOGGING, false),
     }),
-    ProConnectModule,
-    FilesModule,
+    AuthModule,
+    UsersModule,
+    ProfessionalsModule,
+    ServicesModule,
+    ContractsModule,
+    ChatModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}

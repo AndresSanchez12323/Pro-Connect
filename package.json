@@ -2,18 +2,18 @@
   "name": "parcial-proyecto-construccion-software",
   "private": true,
   "scripts": {
-    "setup:local": "npm run install:all",
-    "install:all": "npm --prefix pro-connect/backend install && npm --prefix pro-connect/frontend install",
+    "setup:local": "pnpm run install:all",
+    "install:all": "pnpm -C pro-connect/backend install && pnpm -C pro-connect/frontend install",
     "db:up": "docker compose -f pro-connect/docker-compose.yml up -d",
     "db:down": "docker compose -f pro-connect/docker-compose.yml down",
-    "start:dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev": "npm run dev:frontend",
-    "dev:frontend": "npm --prefix pro-connect/frontend run dev",
-    "dev:backend": "npm --prefix pro-connect/backend run start:dev",
-    "seed": "npm --prefix pro-connect/backend run seed",
-    "build": "npm run build:frontend && npm run build:backend",
-    "build:frontend": "npm --prefix pro-connect/frontend run build",
-    "build:backend": "npm --prefix pro-connect/backend run build"
+    "start:dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev": "pnpm run dev:frontend",
+    "dev:frontend": "pnpm -C pro-connect/frontend run dev",
+    "dev:backend": "pnpm -C pro-connect/backend run start:dev",
+    "seed": "pnpm -C pro-connect/backend run seed",
+    "build": "pnpm run build:frontend && pnpm run build:backend",
+    "build:frontend": "pnpm -C pro-connect/frontend run build",
+    "build:backend": "pnpm -C pro-connect/backend run build"
   },
   "devDependencies": {
     "@types/multer": "^2.1.0",

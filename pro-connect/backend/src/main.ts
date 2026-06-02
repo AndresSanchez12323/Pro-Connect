@@ -17,6 +17,9 @@ async function bootstrap() {
     }),
   );
   app.enableCors({ origin: frontendUrl ?? '*' });
+
+  // Initialize passport
+  app.useGlobalGuards();
   await app.listen(Number(configService.get('PORT') ?? 3002));
 }
 

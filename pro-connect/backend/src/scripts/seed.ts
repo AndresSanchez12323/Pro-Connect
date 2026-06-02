@@ -1,22 +1,12 @@
 import 'reflect-metadata';
 import * as bcrypt from 'bcryptjs';
 import { DataSource } from 'typeorm';
-import {
-  AvailabilitySlot,
-  ChatConversation,
-  ChatMessage,
-  Invoice,
-  Notification,
-  NotificationType,
-  ProfessionalProfile,
-  Reservation,
-  ReservationStatus,
-  Review,
-  Role,
-  Service,
-  ServiceMode,
-  User,
-} from '../pro-connect/entities';
+import { User, Role } from '../modules/users/entities/user.entity';
+import { ProfessionalProfile } from '../modules/professionals/entities/professional-profile.entity';
+import { Service } from '../modules/services/entities/service.entity';
+import { Contract, ContractStatus } from '../modules/contracts/entities/contract.entity';
+import { ChatConversation, ChatMessage } from '../modules/chat/entities/chat.entity';
+import { Notification, NotificationType } from '../modules/notifications/entities/notification.entity';
 
 const appDataSource = new DataSource({
   type: 'postgres',
@@ -25,7 +15,7 @@ const appDataSource = new DataSource({
   username: process.env.DB_USER ?? 'postgres',
   password: process.env.DB_PASSWORD ?? 'postgres',
   database: process.env.DB_NAME ?? 'proconnect',
-  entities: [User, ProfessionalProfile, Service, AvailabilitySlot, Reservation, Review, ChatConversation, ChatMessage, Invoice, Notification],
+  entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification],
   synchronize: true,
   logging: false,
 });
@@ -37,252 +27,125 @@ async function seed() {
   const userRepo = appDataSource.getRepository(User);
   const profileRepo = appDataSource.getRepository(ProfessionalProfile);
   const serviceRepo = appDataSource.getRepository(Service);
-  const slotRepo = appDataSource.getRepository(AvailabilitySlot);
-  const reservationRepo = appDataSource.getRepository(Reservation);
-  const reviewRepo = appDataSource.getRepository(Review);
+  const contractRepo = appDataSource.getRepository(Contract);
   const conversationRepo = appDataSource.getRepository(ChatConversation);
   const messageRepo = appDataSource.getRepository(ChatMessage);
-  const invoiceRepo = appDataSource.getRepository(Invoice);
   const notificationRepo = appDataSource.getRepository(Notification);
 
-  const basePassword = 'ProConnect123!';
-  const passwordHash = await bcrypt.hash(basePassword, 10);
+  const passwordHash = await bcrypt.hash('ProConnect123!', 10);
 
-  const [ana, carlos, maria, juan, laura] = await userRepo.save([
+  const [client, proA, proB] = await userRepo.save([
     userRepo.create({
-      fullName: 'Ana Torres',
-      email: 'ana.user@proconnect.dev',
+      fullName: 'Camila Ruiz',
+      email: 'camila.user@proconnect.dev',
       role: Role.USER,
       passwordHash,
-      birthDate: new Date('1996-03-12'),
-      nationalId: 'CC-1001001001',
       phone: '+57 310 111 2233',
+      location: 'Bogota',
     }),
     userRepo.create({
-      fullName: 'Carlos Mejia',
-      email: 'carlos.user@proconnect.dev',
-      role: Role.USER,
-      passwordHash,
-      birthDate: new Date('1993-11-04'),
-      nationalId: 'CC-1002002002',
-      phone: '+57 310 222 3344',
-    }),
-    userRepo.create({
-      fullName: 'Maria Rojas',
-      email: 'maria.pro@proconnect.dev',
+      fullName: 'Diego Herrera',
+      email: 'diego.pro@proconnect.dev',
       role: Role.PROFESSIONAL,
       passwordHash,
-      birthDate: new Date('1990-09-21'),
-      nationalId: 'CC-2001001001',
       phone: '+57 320 333 4455',
+      location: 'Medellin',
     }),
     userRepo.create({
-      fullName: 'Juan Perez',
-      email: 'juan.pro@proconnect.dev',
-      role: Role.PROFESSIONAL,
-      passwordHash,
-      birthDate: new Date('1988-07-03'),
-      nationalId: 'CC-2002002002',
-      phone: '+57 320 444 5566',
-    }),
-    userRepo.create({
-      fullName: 'Laura Gomez',
+      fullName: 'Laura Morales',
       email: 'laura.pro@proconnect.dev',
       role: Role.PROFESSIONAL,
       passwordHash,
-      birthDate: new Date('1992-05-15'),
-      nationalId: 'CC-2003003003',
       phone: '+57 320 555 6677',
+      location: 'Cali',
     }),
   ]);
 
-  const [mariaProfile, juanProfile, lauraProfile] = await profileRepo.save([
+  const [diegoProfile, lauraProfile] = await profileRepo.save([
     profileRepo.create({
-      id: maria.id,
-      userId: maria.id,
-      specialty: 'Desarrollo Frontend HTML y CSS',
-      experience: 7,
-      description: 'Implemento interfaces pixel perfect con HTML5 y CSS3 moderno, incluyendo integraciones responsivas.',
-      contactInfo: 'Disponible para proyectos remotos y mentoring tecnico.',
+      userId: proA.id,
+      specialty: 'HTML/CSS',
+      headline: 'Maquetador HTML y CSS con enfoque responsive',
+      bio: 'Construyo interfaces pixel perfect con buenas practicas de accesibilidad.',
+      portfolioUrl: 'https://portfolio-diego.dev',
     }),
     profileRepo.create({
-      id: juan.id,
-      userId: juan.id,
-      specialty: 'Maquetación CSS Avanzada',
-      experience: 6,
-      description: 'Especialista en animaciones, Flexbox y CSS Grid para crear diseños web espectaculares.',
-      contactInfo: 'Atencion en linea de lunes a sabado.',
-    }),
-    profileRepo.create({
-      id: laura.id,
-      userId: laura.id,
-      specialty: 'Programación de Componentes HTML',
-      experience: 5,
-      description: 'Construcción de componentes semánticos, accesibles y optimizados para SEO.',
-      contactInfo: 'Sesiones virtuales de 60 y 90 minutos.',
+      userId: proB.id,
+      specialty: 'HTML/CSS',
+      headline: 'Especialista en componentes HTML y estilos escalables',
+      bio: 'Trabajo con sistemas de disenio y diseño responsivo para landing pages.',
+      portfolioUrl: 'https://portfolio-laura.dev',
     }),
   ]);
 
-  const [devAudit, devMentor, uxReview, coaching] = await serviceRepo.save([
+  const [landingService, auditService] = await serviceRepo.save([
     serviceRepo.create({
-      professionalId: mariaProfile.id,
-      name: 'Maquetación de Landing Page (HTML/CSS)',
-      mode: ServiceMode.ONLINE,
+      professionalId: diegoProfile.id,
+      title: 'Landing page HTML/CSS',
+      description: 'Maquetacion completa con secciones, CTA y version mobile.',
       price: 240000,
+      deliveryDays: 5,
     }),
     serviceRepo.create({
-      professionalId: mariaProfile.id,
-      name: 'Refactorización de código CSS (BEM)',
-      mode: ServiceMode.ONLINE,
+      professionalId: lauraProfile.id,
+      title: 'Auditoria de estilos CSS',
+      description: 'Revision de estilos, mejoras de accesibilidad y performance.',
       price: 180000,
-    }),
-    serviceRepo.create({
-      professionalId: juanProfile.id,
-      name: 'Creación de animaciones CSS3',
-      mode: ServiceMode.IN_PERSON,
-      price: 210000,
-    }),
-    serviceRepo.create({
-      professionalId: lauraProfile.id,
-      name: 'Auditoría de Accesibilidad Web HTML',
-      mode: ServiceMode.ONLINE,
-      price: 120000,
+      deliveryDays: 3,
     }),
   ]);
 
-  await slotRepo.save([
-    slotRepo.create({
-      professionalId: mariaProfile.id,
-      startAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      endAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000),
-    }),
-    slotRepo.create({
-      professionalId: juanProfile.id,
-      startAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      endAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000 + 90 * 60 * 1000),
-    }),
-  ]);
-
-  const [reservationNegotiation, reservationConfirmed, reservationCompleted] = await reservationRepo.save([
-    reservationRepo.create({
-      userId: ana.id,
-      professionalId: mariaProfile.id,
-      serviceId: devAudit.id,
-      mode: ServiceMode.ONLINE,
+  const contract = await contractRepo.save(
+    contractRepo.create({
+      clientId: client.id,
+      professionalId: diegoProfile.id,
+      serviceId: landingService.id,
       scheduledAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      status: ReservationStatus.PENDING,
-      onlineLink: 'https://meet.jit.si/proconnect-negociacion-ana-maria',
-      proposedPrice: 200000,
-      negotiationMessage: 'Podemos ajustar el alcance para un presupuesto de 200k?',
-      counterOfferPrice: 220000,
-      counterOfferMessage: 'Puedo incluir entregable reducido y 1 reunion de seguimiento.',
+      status: ContractStatus.ACCEPTED,
+      price: 240000,
+      terms: 'Entrega en 5 dias. Incluye 1 ronda de ajustes.',
+      changesNote: null,
     }),
-    reservationRepo.create({
-      userId: carlos.id,
-      professionalId: juanProfile.id,
-      serviceId: uxReview.id,
-      mode: ServiceMode.IN_PERSON,
-      scheduledAt: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
-      status: ReservationStatus.CONFIRMED,
-      travelAddress: 'Calle 85 #13-50, Bogota',
-      travelCost: 25000,
-    }),
-    reservationRepo.create({
-      userId: ana.id,
-      professionalId: lauraProfile.id,
-      serviceId: coaching.id,
-      mode: ServiceMode.ONLINE,
-      scheduledAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-      status: ReservationStatus.COMPLETED,
-      onlineLink: 'https://meet.jit.si/proconnect-coaching-ana-laura',
-    }),
-  ]);
+  );
 
-  const [conversationNegotiation, conversationConfirmed] = await conversationRepo.save([
-    conversationRepo.create({ reservationId: reservationNegotiation.id }),
-    conversationRepo.create({ reservationId: reservationConfirmed.id }),
-  ]);
+  const conversation = await conversationRepo.save(
+    conversationRepo.create({ contractId: contract.id }),
+  );
 
   await messageRepo.save([
     messageRepo.create({
-      conversationId: conversationNegotiation.id,
-      senderId: ana.id,
-      content: 'Hola Maria, te envie una propuesta de precio para iniciar rapido.',
+      conversationId: conversation.id,
+      senderId: client.id,
+      content: 'Hola Diego, confirmo el alcance de la landing.',
     }),
     messageRepo.create({
-      conversationId: conversationNegotiation.id,
-      senderId: maria.id,
-      content: 'Perfecto Ana, te deje una contraoferta con alcance ajustado.',
-    }),
-    messageRepo.create({
-      conversationId: conversationConfirmed.id,
-      senderId: carlos.id,
-      content: 'Juan, ya quedo confirmada la sesion presencial del jueves.',
+      conversationId: conversation.id,
+      senderId: proA.id,
+      content: 'Perfecto, inicio con el wireframe y te comparto avances.',
     }),
   ]);
-
-  await reviewRepo.save(
-    reviewRepo.create({
-      userId: ana.id,
-      professionalId: lauraProfile.id,
-      rating: 5,
-      comment: 'Excelente sesion, me ayudo a mejorar mi presentacion tecnica.',
-    }),
-  );
-
-  await invoiceRepo.save(
-    invoiceRepo.create({
-      reservationId: reservationCompleted.id,
-      professionalId: lauraProfile.id,
-      total: 120000,
-    }),
-  );
 
   await notificationRepo.save([
     notificationRepo.create({
-      userId: maria.id,
-      type: NotificationType.RESERVATION_CREATED,
-      channel: 'IN_APP',
-      title: 'Nueva solicitud con negociacion',
-      message: 'Ana Torres envio una nueva solicitud con oferta inicial.',
-      readAt: null,
+      userId: proA.id,
+      type: NotificationType.CONTRACT_CREATED,
+      title: 'Nuevo contrato',
+      message: 'Camila envio un contrato para tu servicio.',
     }),
     notificationRepo.create({
-      userId: ana.id,
-      type: NotificationType.RESERVATION_UPDATED,
-      channel: 'IN_APP',
-      title: 'Recibiste una contraoferta',
-      message: 'Maria Rojas envio una contraoferta en tu reserva.',
-      readAt: null,
-    }),
-    notificationRepo.create({
-      userId: juan.id,
-      type: NotificationType.NEW_CHAT_MESSAGE,
-      channel: 'IN_APP',
-      title: 'Nuevo mensaje de Carlos',
-      message: 'Carlos Mejia te escribio en la reserva confirmada.',
-      readAt: null,
-    }),
-    notificationRepo.create({
-      userId: carlos.id,
-      type: NotificationType.RESERVATION_UPDATED,
-      channel: 'IN_APP',
-      title: 'Reserva confirmada',
-      message: 'Tu reserva con Juan Perez fue confirmada.',
-      readAt: new Date(),
+      userId: client.id,
+      type: NotificationType.CONTRACT_RESPONSE,
+      title: 'Contrato aceptado',
+      message: 'Diego acepto tu solicitud.',
     }),
   ]);
 
-  const credentials = [
-    { role: 'USER', email: ana.email, password: basePassword },
-    { role: 'USER', email: carlos.email, password: basePassword },
-    { role: 'PROFESSIONAL', email: maria.email, password: basePassword },
-    { role: 'PROFESSIONAL', email: juan.email, password: basePassword },
-    { role: 'PROFESSIONAL', email: laura.email, password: basePassword },
-  ];
-
   console.log('Seed ejecutado correctamente.');
-  console.table(credentials);
+  console.table([
+    { role: 'USER', email: client.email, password: 'ProConnect123!' },
+    { role: 'PROFESSIONAL', email: proA.email, password: 'ProConnect123!' },
+    { role: 'PROFESSIONAL', email: proB.email, password: 'ProConnect123!' },
+  ]);
 
   await appDataSource.destroy();
 }

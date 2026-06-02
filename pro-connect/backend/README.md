@@ -4,10 +4,10 @@ API construida con NestJS y TypeORM.
 
 ## Scripts
 
-- npm run start:dev
-- npm run build
-- npm run start:prod
-- npm run seed
+- pnpm run start:dev
+- pnpm run build
+- pnpm run start:prod
+- pnpm run seed
 
 ## Variables de entorno
 

@@ -4,10 +4,10 @@ Aplicacion web en React + Vite para clientes y profesionales.
 
 ## Scripts
 
-- npm run dev
-- npm run build
-- npm run preview
-- npm run lint
+- pnpm run dev
+- pnpm run build
+- pnpm run preview
+- pnpm run lint
 
 ## Configuracion
 

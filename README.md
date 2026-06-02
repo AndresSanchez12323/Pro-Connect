@@ -15,13 +15,13 @@ Usen este flujo en desarrollo para no depender de deploy:
 1. Instalar dependencias:
 
 ```bash
-npm run setup:local
+pnpm run setup:local
 ```
 
 2. Levantar base local:
 
 ```bash
-npm run db:up
+pnpm run db:up
 ```
 
 3. Crear archivos `.env` desde ejemplos:
@@ -32,12 +32,12 @@ npm run db:up
 4. Ejecutar todo el proyecto:
 
 ```bash
-yarn start:dev
+pnpm run start:dev
 ```
 
 Notas:
 
-- `yarn start:dev` levanta backend y frontend juntos en paralelo.
+- `pnpm run start:dev` levanta backend y frontend juntos en paralelo.
 - No es necesario configurar Render ni Vercel para trabajar en local.
 
 ## Enlaces de produccion
@@ -78,26 +78,25 @@ pro-connect/
 1. Levantar base local:
 
 ```bash
-npm run db:up
+pnpm run db:up
 ```
 
 2. Instalar dependencias:
 
 ```bash
-npm run setup:local
+pnpm run setup:local
 ```
 
 3. Ejecutar servicios:
 
 ```bash
-yarn start:dev
+pnpm run start:dev
 ```
 
 Notas:
 
-- `yarn start:dev` levanta backend y frontend juntos en paralelo.
-- Alternativa equivalente con npm: `npm run start:dev`.
-- Para apagar Postgres local: `npm run db:down`.
+- `pnpm run start:dev` levanta backend y frontend juntos en paralelo.
+- Para apagar Postgres local: `pnpm run db:down`.
 
 ## Variables de entorno
 
