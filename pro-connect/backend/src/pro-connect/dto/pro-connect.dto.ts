@@ -151,6 +151,22 @@ export class CreateServiceDto {
   mode!: ServiceMode;
 }
 
+export class UpdateServiceDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  name?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  price?: number;
+
+  @IsOptional()
+  @IsEnum(ServiceMode)
+  mode?: ServiceMode;
+}
+
 export class CreateAvailabilityDto {
   @IsUUID()
   professionalId!: string;

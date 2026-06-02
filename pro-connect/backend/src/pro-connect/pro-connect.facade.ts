@@ -9,7 +9,7 @@ import {
 } from './entities';
 import { 
   CreateAvailabilityDto, CreateProfessionalProfileDto, CreateReservationDto, 
-  CreateReviewDto, CreateServiceDto, LoginDto, RegisterDto, RequestPasswordRecoveryDto, RescheduleReservationDto, ResetPasswordDto, RespondReservationDto, SendMessageDto,
+  CreateReviewDto, CreateServiceDto, UpdateServiceDto, LoginDto, RegisterDto, RequestPasswordRecoveryDto, RescheduleReservationDto, ResetPasswordDto, RespondReservationDto, SendMessageDto,
   UpdateMeDto,
   UpdateProfessionalProfileDto 
 } from './dto/pro-connect.dto';
@@ -446,6 +446,38 @@ export class ProConnectFacade {
         mode: dto.mode as ServiceMode,
     });
     return this.serviceRepository.save(service);
+  }
+
+  async updateService(userId: string, serviceId: string, dto: UpdateServiceDto) {
+    await this.requireRole(userId, Role.PROFESSIONAL);
+    const profile = await this.requireProfessionalByUserId(userId);
+    
+    const service = await this.serviceRepository.findOneBy({ id: serviceId });
+    if (!service) {
+      throw new NotFoundException('Servicio no encontrado.');
+    }
+    if (service.professionalId !== profile.id) {
+      throw new ForbiddenException('No autorizado para modificar este servicio.');
+    }
+
+    Object.assign(service, dto);
+    return this.serviceRepository.save(service);
+  }
+
+  async deleteService(userId: string, serviceId: string) {
+    await this.requireRole(userId, Role.PROFESSIONAL);
+    const profile = await this.requireProfessionalByUserId(userId);
+    
+    const service = await this.serviceRepository.findOneBy({ id: serviceId });
+    if (!service) {
+      throw new NotFoundException('Servicio no encontrado.');
+    }
+    if (service.professionalId !== profile.id) {
+      throw new ForbiddenException('No autorizado para eliminar este servicio.');
+    }
+
+    await this.serviceRepository.remove(service);
+    return { success: true, message: 'Servicio eliminado correctamente.' };
   }
 
   async createAvailability(userId: string, dto: CreateAvailabilityDto) {
