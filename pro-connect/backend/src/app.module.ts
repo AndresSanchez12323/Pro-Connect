@@ -9,12 +9,16 @@ import { ContractsModule } from './modules/contracts/contracts.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { InvoicesModule } from './modules/invoices/invoices.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 import { User } from './modules/users/entities/user.entity';
 import { ProfessionalProfile } from './modules/professionals/entities/professional-profile.entity';
 import { Service } from './modules/services/entities/service.entity';
 import { Contract } from './modules/contracts/entities/contract.entity';
 import { ChatConversation, ChatMessage } from './modules/chat/entities/chat.entity';
 import { Notification } from './modules/notifications/entities/notification.entity';
+import { Invoice } from './modules/invoices/entities/invoice.entity';
+import { Review } from './modules/reviews/entities/review.entity';
 
 const asBool = (value: string | undefined, fallback: boolean): boolean => {
   if (value == null) return fallback;
@@ -40,7 +44,7 @@ const asBool = (value: string | undefined, fallback: boolean): boolean => {
       ssl: asBool(process.env.DB_SSL, false)
         ? { rejectUnauthorized: false }
         : false,
-      entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification],
+      entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification, Invoice, Review],
       synchronize: asBool(process.env.DB_SYNCHRONIZE, true),
       logging: asBool(process.env.DB_LOGGING, false),
     }),
@@ -52,6 +56,8 @@ const asBool = (value: string | undefined, fallback: boolean): boolean => {
     ChatModule,
     NotificationsModule,
     DashboardModule,
+    InvoicesModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}

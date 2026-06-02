@@ -13,6 +13,7 @@ interface InvoiceItem {
     id: string;
     status: string;
     service?: {
+      title?: string;
       name: string;
       price: number | string;
     };
@@ -23,6 +24,7 @@ interface ReservationForInvoice {
   id: string;
   status: string;
   service: {
+    title?: string;
     name: string;
     price: number;
   } | null;
@@ -78,7 +80,7 @@ export default function Invoices() {
       reservations.filter(
         (reservation) =>
           !invoiceReservationIds.has(reservation.id) &&
-          (reservation.status === 'CONFIRMED' || reservation.status === 'COMPLETED'),
+          (reservation.status === 'ACCEPTED' || reservation.status === 'SIGNED' || reservation.status === 'COMPLETED'),
       ),
     [invoiceReservationIds, reservations],
   );
@@ -106,7 +108,7 @@ export default function Invoices() {
                 {availableToGenerate.map((reservation) => (
                   <div key={reservation.id} className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-3 border border-white/10 p-3 rounded-sm">
                     <div>
-                      <p className="text-xs text-white font-mono break-words">{reservation.service?.name ?? 'Servicio'}</p>
+                      <p className="text-xs text-white font-mono break-words">{reservation.service?.title ?? reservation.service?.name ?? 'Servicio'}</p>
                       <p className="text-[11px] text-gray-500 font-mono">Reserva {reservation.id.slice(0, 8)}... · {traducirEstado(reservation.status)}</p>
                     </div>
                     <button
@@ -131,7 +133,7 @@ export default function Invoices() {
                 {invoices.map((invoice) => (
                   <div key={invoice.id} className="border border-white/10 p-3 rounded-sm">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
-                      <p className="text-xs text-white font-mono break-words">{invoice.reservation?.service?.name ?? 'Servicio facturado'}</p>
+                      <p className="text-xs text-white font-mono break-words">{invoice.reservation?.service?.title ?? invoice.reservation?.service?.name ?? 'Servicio facturado'}</p>
                       <p className="text-sm text-primary font-mono font-bold">${Number(invoice.total).toLocaleString()}</p>
                     </div>
                     <p className="text-[11px] text-gray-500 font-mono mt-1">

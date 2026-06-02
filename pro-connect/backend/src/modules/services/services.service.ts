@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Service } from './entities/service.entity';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -13,6 +13,21 @@ export class ServicesService {
     @InjectRepository(ProfessionalProfile)
     private readonly professionalsRepository: Repository<ProfessionalProfile>,
   ) {}
+
+  async listAvailable(query?: string) {
+    const term = query?.trim();
+    return this.servicesRepository.find({
+      where: term
+        ? [
+            { title: Like(`%${term}%`) },
+            { description: Like(`%${term}%`) },
+            { professional: { specialty: Like(`%${term}%`) } },
+          ]
+        : undefined,
+      relations: { professional: { user: true } },
+      order: { createdAt: 'DESC' },
+    });
+  }
 
   async listByProfessional(profileId: string) {
     return this.servicesRepository.find({ where: { professionalId: profileId }, order: { createdAt: 'DESC' } });

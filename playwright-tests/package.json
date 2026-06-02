@@ -1,0 +1,17 @@
+{
+  "name": "proconnect-playwright-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pruebas E2E independientes para ProConnect.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report playwright-report",
+    "install:browsers": "playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -17,9 +17,9 @@ export class ServicesController {
   }
 
   @Get()
-  listByProfessional(@Query('professionalId') professionalId?: string) {
+  list(@Query('professionalId') professionalId?: string, @Query('q') query?: string) {
     if (!professionalId) {
-      return [];
+      return this.servicesService.listAvailable(query);
     }
     return this.servicesService.listByProfessional(professionalId);
   }

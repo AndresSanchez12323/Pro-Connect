@@ -81,7 +81,7 @@ export default function ClientHiring() {
                 <div className="mt-3 text-xs text-gray-400 font-mono flex flex-wrap items-center gap-2">
                   <CalendarDays className="w-4 h-4" /> {new Date(item.scheduledAt).toLocaleString()} - {traducirModalidad(item.mode)}
                 </div>
-                {item.status === 'PENDING' && item.counterOfferPrice && (
+                {item.status === 'CHANGES_REQUESTED' && item.counterOfferPrice && (
                   <button onClick={() => void acceptCounterOffer(item.id)} className="mt-3 text-xs px-3 py-1.5 border border-green-600 text-green-400 rounded hover:bg-green-900/20">
                     Aceptar contraoferta
                   </button>

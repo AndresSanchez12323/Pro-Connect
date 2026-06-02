@@ -8,30 +8,51 @@ interface JobDetail {
   id: string;
   status: string;
   scheduledAt: string;
-  mode: string;
-  onlineLink: string | null;
-  travelAddress: string | null;
-  service: { name: string; price: number } | null;
+  mode?: string;
+  onlineLink?: string | null;
+  travelAddress?: string | null;
+  price: number | string;
+  terms?: string;
+  changesNote?: string | null;
+  service: { title?: string; name?: string; price: number | string; deliveryDays?: number } | null;
   client: { fullName: string; email: string } | null;
 }
 
 export default function ProfessionalJobDetail() {
   const { reservationId } = useParams();
   const [item, setItem] = useState<JobDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     void load();
   }, [reservationId]);
 
   async function load() {
-    const { data } = await api.get('/reservations/mine');
-    const found = (data as JobDetail[]).find((row) => row.id === reservationId) ?? null;
-    setItem(found);
+    if (!reservationId) return;
+
+    setLoading(true);
+    setError('');
+    try {
+      const { data } = await api.get(`/contracts/${reservationId}`);
+      setItem(data as JobDetail);
+    } catch (err: any) {
+      setItem(null);
+      setError(err?.response?.data?.message ?? 'No se pudo cargar este trabajo.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return <div className="minimal-card p-6 text-sm text-gray-500">Cargando trabajo...</div>;
   }
 
   if (!item) {
-    return <div className="minimal-card p-6 text-sm text-gray-500">Trabajo no encontrado.</div>;
+    return <div className="minimal-card p-6 text-sm text-gray-500">{error || 'Trabajo no encontrado.'}</div>;
   }
+
+  const serviceName = item.service?.title ?? item.service?.name ?? 'Servicio';
 
   return (
     <div className="space-y-6">
@@ -44,7 +65,7 @@ export default function ProfessionalJobDetail() {
         <div className="grid md:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-gray-400">Servicio</p>
-            <p className="text-white">{item.service?.name ?? 'Servicio'}</p>
+            <p className="text-white">{serviceName}</p>
           </div>
           <div>
             <p className="text-gray-400">Cliente</p>
@@ -53,17 +74,39 @@ export default function ProfessionalJobDetail() {
           </div>
           <div>
             <p className="text-gray-400">Estado</p>
-            <p className="text-white">{traducirEstado(item.status)}</p>
+            <p className="text-white">{traducirEstado(item.status === 'SENT' ? 'PENDING' : item.status)}</p>
           </div>
           <div>
             <p className="text-gray-400">Modalidad</p>
-            <p className="text-white">{traducirModalidad(item.mode)}</p>
+            <p className="text-white">{traducirModalidad(item.mode ?? 'ONLINE')}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Valor acordado</p>
+            <p className="text-white">${Number(item.price).toLocaleString()}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Entrega estimada</p>
+            <p className="text-white">{item.service?.deliveryDays ?? 3} dias</p>
           </div>
         </div>
 
         <div className="rounded-md border border-white/10 p-4 bg-black/20 text-sm text-gray-300 flex items-center gap-2">
           <CalendarDays className="w-4 h-4" /> {new Date(item.scheduledAt).toLocaleString()}
         </div>
+
+        {item.terms && (
+          <div className="text-sm">
+            <p className="text-gray-400">Condiciones del cliente</p>
+            <p className="text-white break-words">{item.terms}</p>
+          </div>
+        )}
+
+        {item.changesNote && (
+          <div className="text-sm">
+            <p className="text-gray-400">Cambios propuestos</p>
+            <p className="text-white break-words">{item.changesNote}</p>
+          </div>
+        )}
 
         {item.onlineLink && (
           <div className="text-sm">

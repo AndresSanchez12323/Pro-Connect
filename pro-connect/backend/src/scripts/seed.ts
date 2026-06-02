@@ -7,6 +7,8 @@ import { Service } from '../modules/services/entities/service.entity';
 import { Contract, ContractStatus } from '../modules/contracts/entities/contract.entity';
 import { ChatConversation, ChatMessage } from '../modules/chat/entities/chat.entity';
 import { Notification, NotificationType } from '../modules/notifications/entities/notification.entity';
+import { Invoice } from '../modules/invoices/entities/invoice.entity';
+import { Review } from '../modules/reviews/entities/review.entity';
 
 const appDataSource = new DataSource({
   type: 'postgres',
@@ -15,7 +17,7 @@ const appDataSource = new DataSource({
   username: process.env.DB_USER ?? 'postgres',
   password: process.env.DB_PASSWORD ?? 'postgres',
   database: process.env.DB_NAME ?? 'proconnect',
-  entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification],
+  entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification, Invoice, Review],
   synchronize: false,
   logging: false,
 });

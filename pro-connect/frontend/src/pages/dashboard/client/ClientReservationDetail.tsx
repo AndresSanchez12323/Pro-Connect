@@ -8,12 +8,15 @@ interface ReservationDetail {
   id: string;
   status: string;
   scheduledAt: string;
-  mode: string;
-  onlineLink: string | null;
-  travelAddress: string | null;
-  professionalProfileId: string;
-  service: { name: string; price: number } | null;
-  professional: { fullName: string; email: string } | null;
+  mode?: string;
+  onlineLink?: string | null;
+  travelAddress?: string | null;
+  professionalId: string;
+  price: number | string;
+  terms?: string;
+  changesNote?: string | null;
+  service: { title?: string; name?: string; price: number | string; deliveryDays?: number } | null;
+  professional: { user?: { fullName: string; email: string } } | null;
 }
 
 interface ReputationData {
@@ -29,26 +32,34 @@ export default function ClientReservationDetail() {
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
   const [reputation, setReputation] = useState<ReputationData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     void load();
   }, [reservationId]);
 
   async function load() {
-    try {
-      const { data } = await api.get('/reservations/mine');
-      const found = (data as ReservationDetail[]).find((row) => row.id === reservationId) ?? null;
-      setItem(found);
+    if (!reservationId) return;
 
-      if (found?.professionalProfileId) {
-        const reputationRes = await api.get(`/reputation/${found.professionalProfileId}`);
+    setLoading(true);
+    setError('');
+    try {
+      const { data } = await api.get(`/contracts/${reservationId}`);
+      const contract = data as ReservationDetail;
+      setItem(contract);
+
+      try {
+        const reputationRes = await api.get(`/reputation/${contract.professionalId}`);
         setReputation(reputationRes.data as ReputationData);
-      } else {
+      } catch {
         setReputation(null);
       }
-    } catch {
+    } catch (err: any) {
       setItem(null);
       setReputation(null);
+      setError(err?.response?.data?.message ?? 'No se pudo cargar este contrato.');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -72,7 +83,8 @@ export default function ClientReservationDetail() {
     setFeedback('');
     try {
       await api.post('/reviews', {
-        professionalId: item.professionalProfileId,
+        professionalId: item.professionalId,
+        contractId: item.id,
         rating,
         comment,
       });
@@ -84,9 +96,22 @@ export default function ClientReservationDetail() {
     }
   }
 
-  if (!item) {
-    return <div className="minimal-card p-6 text-sm text-gray-500">Reserva no encontrada.</div>;
+  if (loading) {
+    return <div className="minimal-card p-6 text-sm text-gray-500">Cargando contrato...</div>;
   }
+
+  if (!item) {
+    return (
+      <div className="minimal-card p-6 text-sm text-gray-500">
+        {error || 'Contrato no encontrado.'}
+      </div>
+    );
+  }
+
+  const serviceName = item.service?.title ?? item.service?.name ?? 'Servicio';
+  const professionalUser = item.professional?.user;
+  const canGenerateInvoice = ['ACCEPTED', 'SIGNED', 'COMPLETED'].includes(item.status);
+  const canReview = ['ACCEPTED', 'SIGNED', 'COMPLETED'].includes(item.status);
 
   return (
     <div className="space-y-6">
@@ -99,26 +124,48 @@ export default function ClientReservationDetail() {
         <div className="grid md:grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-gray-400">Servicio</p>
-            <p className="text-white">{item.service?.name ?? 'Servicio'}</p>
+            <p className="text-white">{serviceName}</p>
           </div>
           <div>
             <p className="text-gray-400">Profesional</p>
-            <p className="text-white">{item.professional?.fullName ?? 'Profesional'}</p>
-            <p className="text-gray-500">{item.professional?.email ?? ''}</p>
+            <p className="text-white">{professionalUser?.fullName ?? 'Profesional'}</p>
+            <p className="text-gray-500">{professionalUser?.email ?? ''}</p>
           </div>
           <div>
             <p className="text-gray-400">Estado</p>
-            <p className="text-white">{traducirEstado(item.status)}</p>
+            <p className="text-white">{traducirEstado(item.status === 'SENT' ? 'PENDING' : item.status)}</p>
           </div>
           <div>
             <p className="text-gray-400">Modalidad</p>
-            <p className="text-white">{traducirModalidad(item.mode)}</p>
+            <p className="text-white">{traducirModalidad(item.mode ?? 'ONLINE')}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Valor acordado</p>
+            <p className="text-white">${Number(item.price).toLocaleString()}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Entrega estimada</p>
+            <p className="text-white">{item.service?.deliveryDays ?? 3} dias</p>
           </div>
         </div>
 
         <div className="rounded-md border border-white/10 p-4 bg-black/20 text-sm text-gray-300 flex items-center gap-2">
           <CalendarDays className="w-4 h-4" /> {new Date(item.scheduledAt).toLocaleString()}
         </div>
+
+        {item.terms && (
+          <div className="text-sm">
+            <p className="text-gray-400">Condiciones</p>
+            <p className="text-white break-words">{item.terms}</p>
+          </div>
+        )}
+
+        {item.changesNote && (
+          <div className="text-sm">
+            <p className="text-gray-400">Cambios propuestos</p>
+            <p className="text-white break-words">{item.changesNote}</p>
+          </div>
+        )}
 
         {item.onlineLink && (
           <div className="text-sm">
@@ -138,10 +185,10 @@ export default function ClientReservationDetail() {
           <h2 className="text-sm font-semibold text-white">Facturación</h2>
           <button
             onClick={() => void handleGenerateInvoice()}
-            disabled={item.status !== 'CONFIRMED' && item.status !== 'COMPLETED'}
+            disabled={!canGenerateInvoice}
             className="text-xs px-3 py-2 border border-primary/30 text-primary rounded-sm hover:bg-primary/10 disabled:opacity-50"
           >
-            Generar factura de esta reserva
+            Generar factura de este contrato
           </button>
         </div>
 
@@ -151,7 +198,7 @@ export default function ClientReservationDetail() {
             Promedio actual: {reputation ? reputation.average.toFixed(1) : '0.0'} ({reputation?.count ?? 0} reseñas)
           </p>
 
-          {item.status === 'COMPLETED' && (
+          {canReview && (
             <form onSubmit={handleReviewSubmit} className="space-y-2">
               <div className="flex items-center gap-2">
                 <label className="text-xs text-gray-400">Calificación</label>
