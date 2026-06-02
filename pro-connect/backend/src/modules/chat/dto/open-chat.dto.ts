@@ -1,6 +1,11 @@
-import { IsUUID } from 'class-validator';
+import { IsOptional, IsUUID } from 'class-validator';
 
 export class OpenChatDto {
+  @IsOptional()
   @IsUUID()
-  contractId: string;
+  contractId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  reservationId?: string;
 }

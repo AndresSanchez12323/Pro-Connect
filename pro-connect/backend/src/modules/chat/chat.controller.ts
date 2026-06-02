@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { RequestUser } from '../../common/types/request-user';
+import type { RequestUser } from '../../common/types/request-user';
 import { ChatService } from './chat.service';
 import { SendMessageDto } from './dto/send-message.dto';
+import { OpenChatDto } from './dto/open-chat.dto';
 
 @Controller('chat')
 @UseGuards(JwtAuthGuard)
@@ -13,6 +14,16 @@ export class ChatController {
   @Get('conversations')
   list(@CurrentUser() user: RequestUser) {
     return this.chatService.listConversations(user.id);
+  }
+
+  @Get('mine')
+  listMine(@CurrentUser() user: RequestUser) {
+    return this.chatService.listConversationSummaries(user.id);
+  }
+
+  @Post('open')
+  open(@CurrentUser() user: RequestUser, @Body() dto: OpenChatDto) {
+    return this.chatService.openConversation(user.id, dto.contractId ?? dto.reservationId);
   }
 
   @Get(':contractId')

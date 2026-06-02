@@ -22,7 +22,7 @@ export class ProfessionalsService {
 
     return this.professionalsRepository.find({
       where,
-      relations: { user: true },
+      relations: { user: true, services: true },
       order: { createdAt: 'DESC' },
     });
   }
@@ -36,6 +36,11 @@ export class ProfessionalsService {
       throw new NotFoundException('Perfil profesional no encontrado.');
     }
     return profile;
+  }
+
+  async listServices(profileId: string) {
+    const profile = await this.findById(profileId);
+    return profile.services ?? [];
   }
 
   async findByUserId(userId: string) {

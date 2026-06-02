@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Search, Star, ArrowRight, Code } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../lib/api';
-import { traducirModalidad } from '../../lib/i18n';
 
 interface Service {
   id: string;
-  name: string;
+  title: string;
+  description: string;
   price: number | string;
-  mode: 'ONLINE' | 'IN_PERSON';
+  deliveryDays: number;
 }
 
 interface Professional {
@@ -91,11 +91,11 @@ export default function ServicesView() {
     const params = new URLSearchParams({
       professionalId: professional.id,
       serviceId: selectedService.id,
-      serviceName: selectedService.name,
+      serviceName: selectedService.title,
       professionalName: professional.user?.fullName ?? 'Profesional',
       specialty: professional.specialty,
       price: String(selectedService.price),
-      mode: selectedService.mode,
+      deliveryDays: String(selectedService.deliveryDays),
     });
 
     navigate(`/dashboard/client/checkout?${params.toString()}`);
@@ -169,7 +169,7 @@ export default function ServicesView() {
                   </div>
 
                   <div className="flex flex-wrap justify-center sm:justify-start gap-3 mt-3 text-[10px] text-gray-500 font-bold font-mono uppercase">
-                    <span className="bg-primary/5 px-2 py-1 border border-primary/20 text-primary">{traducirModalidad(service?.mode ?? 'ONLINE')}</span>
+                    <span className="bg-primary/5 px-2 py-1 border border-primary/20 text-primary">{service?.deliveryDays ?? 3} DIAS</span>
                     <span className="bg-primary/5 text-primary px-2 py-1 border border-primary/20 animate-pulse">Disponible_Ahora</span>
                   </div>
                 </div>

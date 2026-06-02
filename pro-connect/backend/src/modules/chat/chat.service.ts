@@ -36,6 +36,51 @@ export class ChatService {
     });
   }
 
+  async listConversationSummaries(userId: string) {
+    const contracts = await this.contractsRepository.find({
+      where: [{ clientId: userId }, { professional: { userId } }],
+      relations: { professional: { user: true }, client: true },
+      order: { createdAt: 'DESC' },
+    });
+
+    return Promise.all(
+      contracts.map(async (contract) => {
+        const conversation = await this.ensureConversation(contract.id);
+        const messages = await this.messagesRepository.find({
+          where: { conversationId: conversation.id },
+          order: { createdAt: 'DESC' },
+          take: 1,
+        });
+        const messageCount = await this.messagesRepository.count({ where: { conversationId: conversation.id } });
+        const peer = contract.clientId === userId ? contract.professional.user : contract.client;
+
+        return {
+          id: conversation.id,
+          reservationId: contract.id,
+          contractId: contract.id,
+          peer: peer
+            ? {
+                id: peer.id,
+                fullName: peer.fullName,
+                email: peer.email,
+              }
+            : null,
+          messageCount,
+          lastMessage: messages[0] ?? null,
+        };
+      }),
+    );
+  }
+
+  async openConversation(userId: string, contractId?: string) {
+    if (!contractId) {
+      throw new NotFoundException('Contrato no encontrado.');
+    }
+
+    const contract = await this.getContractForUser(userId, contractId);
+    return this.ensureConversation(contract.id);
+  }
+
   async getMessages(userId: string, contractId: string) {
     const contract = await this.getContractForUser(userId, contractId);
     const conversation = await this.ensureConversation(contract.id);
@@ -49,7 +94,12 @@ export class ChatService {
   }
 
   async sendMessage(userId: string, dto: SendMessageDto) {
-    const contract = await this.getContractForUser(userId, dto.contractId);
+    const contractId = dto.contractId ?? dto.reservationId;
+    if (!contractId) {
+      throw new NotFoundException('Contrato no encontrado.');
+    }
+
+    const contract = await this.getContractForUser(userId, contractId);
     if (![ContractStatus.ACCEPTED, ContractStatus.SIGNED].includes(contract.status)) {
       throw new ForbiddenException('El chat se habilita cuando el contrato es aceptado.');
     }

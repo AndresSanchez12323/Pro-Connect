@@ -18,6 +18,7 @@ export interface SessionProfile {
 }
 
 export interface AppSession {
+  token: string;
   user: SessionUser;
   profile: SessionProfile | null;
 }
@@ -48,6 +49,10 @@ export function clearSession(): void {
 
 export function getCurrentUserId(): string | null {
   return getSession()?.user.id ?? null;
+}
+
+export function getAuthToken(): string | null {
+  return getSession()?.token ?? null;
 }
 
 export function isProfessional(): boolean {

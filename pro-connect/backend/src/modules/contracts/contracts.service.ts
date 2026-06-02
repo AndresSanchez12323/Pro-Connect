@@ -6,6 +6,8 @@ import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 import { RespondContractDto } from './dto/respond-contract.dto';
 import { SignContractDto } from './dto/sign-contract.dto';
+import { CreateReservationDto } from './dto/create-reservation.dto';
+import { RespondReservationDto } from './dto/respond-reservation.dto';
 import { ProfessionalProfile } from '../professionals/entities/professional-profile.entity';
 import { Service } from '../services/entities/service.entity';
 import { Role } from '../users/entities/user.entity';
@@ -28,6 +30,11 @@ export class ContractsService {
       relations: { service: true, professional: { user: true }, client: true },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async listReservationsForUser(userId: string) {
+    const contracts = await this.listForUser(userId);
+    return contracts.map((contract) => this.toReservationSummary(contract));
   }
 
   async getById(userId: string, contractId: string) {
@@ -77,6 +84,30 @@ export class ContractsService {
     );
 
     return saved;
+  }
+
+  async createFromReservation(userId: string, dto: CreateReservationDto) {
+    const service = await this.servicesRepository.findOne({ where: { id: dto.serviceId } });
+    if (!service) {
+      throw new NotFoundException('Servicio no encontrado.');
+    }
+
+    const price = dto.price ?? Number(service.price);
+    const terms =
+      dto.terms ??
+      `Solicitud de servicio HTML/CSS: ${service.title}. El alcance final puede ajustarse por acuerdo entre cliente y profesional.`;
+
+    const contract = await this.create(userId, {
+      professionalId: dto.professionalId,
+      serviceId: dto.serviceId,
+      scheduledAt: dto.scheduledAt,
+      price,
+      terms,
+    });
+
+    return this.toReservationSummary(
+      await this.getById(userId, contract.id),
+    );
   }
 
   async update(userId: string, contractId: string, dto: UpdateContractDto) {
@@ -188,5 +219,101 @@ export class ContractsService {
     );
 
     return updated;
+  }
+
+  async respondToReservation(userId: string, contractId: string, dto: RespondReservationDto) {
+    if (dto.action === 'COUNTER' || dto.action === 'CHANGES') {
+      const contract = await this.getById(userId, contractId);
+      if (contract.professional.userId !== userId) {
+        throw new ForbiddenException('Solo el profesional puede responder el contrato.');
+      }
+
+      contract.status = ContractStatus.CHANGES_REQUESTED;
+      contract.price = dto.counterPrice ?? contract.price;
+      contract.changesNote = dto.counterMessage ?? dto.changesNote ?? null;
+      const updated = await this.contractsRepository.save(contract);
+
+      await this.notificationsService.notify(
+        contract.clientId,
+        NotificationType.CONTRACT_RESPONSE,
+        'Cambios solicitados',
+        'El profesional propuso cambios al contrato.',
+      );
+
+      return updated;
+    }
+
+    return this.respond(userId, contractId, {
+      action: dto.action,
+      changesNote: dto.changesNote,
+    });
+  }
+
+  async acceptReservationChanges(userId: string, contractId: string) {
+    const contract = await this.getById(userId, contractId);
+    if (contract.clientId !== userId) {
+      throw new ForbiddenException('Solo el cliente puede aceptar cambios del contrato.');
+    }
+
+    contract.status = ContractStatus.ACCEPTED;
+    contract.changesNote = null;
+    const updated = await this.contractsRepository.save(contract);
+
+    await this.notificationsService.notify(
+      contract.professional.userId,
+      NotificationType.CONTRACT_RESPONSE,
+      'Cambios aceptados',
+      'El cliente acepto los cambios del contrato.',
+    );
+
+    return updated;
+  }
+
+  private toReservationSummary(contract: Contract) {
+    return {
+      id: contract.id,
+      contractId: contract.id,
+      userId: contract.clientId,
+      client: contract.client
+        ? {
+            id: contract.client.id,
+            fullName: contract.client.fullName,
+            email: contract.client.email,
+          }
+        : null,
+      professional: contract.professional?.user
+        ? {
+            id: contract.professional.user.id,
+            fullName: contract.professional.user.fullName,
+            email: contract.professional.user.email,
+          }
+        : null,
+      professionalProfileId: contract.professionalId,
+      serviceId: contract.serviceId,
+      mode: 'ONLINE',
+      service: contract.service
+        ? {
+            id: contract.service.id,
+            name: contract.service.title,
+            title: contract.service.title,
+            price: contract.service.price,
+            deliveryDays: contract.service.deliveryDays,
+          }
+        : null,
+      serviceName: contract.service?.title,
+      scheduledAt: contract.scheduledAt,
+      status: contract.status === ContractStatus.SENT ? 'PENDING' : contract.status,
+      price: contract.price,
+      proposedPrice: contract.price,
+      negotiationMessage: contract.terms,
+      counterOfferPrice: contract.status === ContractStatus.CHANGES_REQUESTED ? contract.price : null,
+      counterOfferMessage: contract.changesNote,
+      terms: contract.terms,
+      changesNote: contract.changesNote,
+      clientSignature: contract.clientSignature,
+      professionalSignature: contract.professionalSignature,
+      signedAt: contract.signedAt,
+      createdAt: contract.createdAt,
+    };
   }
 }

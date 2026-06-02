@@ -18,6 +18,15 @@ export class ServicesService {
     return this.servicesRepository.find({ where: { professionalId: profileId }, order: { createdAt: 'DESC' } });
   }
 
+  async listMine(userId: string) {
+    const profile = await this.professionalsRepository.findOne({ where: { userId } });
+    if (!profile) {
+      throw new ForbiddenException('Solo profesionales pueden ver sus servicios.');
+    }
+
+    return this.listByProfessional(profile.id);
+  }
+
   async getById(serviceId: string) {
     const service = await this.servicesRepository.findOne({ where: { id: serviceId } });
     if (!service) {

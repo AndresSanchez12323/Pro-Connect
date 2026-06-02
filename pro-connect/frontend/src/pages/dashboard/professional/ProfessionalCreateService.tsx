@@ -2,35 +2,29 @@ import { useState } from 'react';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../../lib/api';
-import { getSession } from '../../../lib/session';
 
 export default function ProfessionalCreateService() {
   const navigate = useNavigate();
-  const session = getSession();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [mode, setMode] = useState<'ONLINE' | 'IN_PERSON'>('ONLINE');
+  const [deliveryDays, setDeliveryDays] = useState('3');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!session?.profile?.id) {
-      setError('No se encontro el perfil profesional activo.');
-      return;
-    }
 
     setLoading(true);
     setError('');
 
     try {
       await api.post('/services', {
-        professionalId: session.profile.id,
-        name: `${name} - ${description}`,
+        title: name,
+        description,
         price: Math.max(1, Math.round(Number(price || 0))),
-        mode,
+        deliveryDays: Math.max(1, Math.round(Number(deliveryDays || 1))),
       });
       navigate('/dashboard/professional/services');
     } catch (err: any) {
@@ -84,15 +78,15 @@ export default function ProfessionalCreateService() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-400 font-mono">MODALIDAD</label>
-              <select
-                value={mode}
-                onChange={(e) => setMode(e.target.value as 'ONLINE' | 'IN_PERSON')}
+              <label className="text-sm font-bold text-gray-400 font-mono">DIAS ESTIMADOS</label>
+              <input
+                type="number"
+                min="1"
+                value={deliveryDays}
+                onChange={(e) => setDeliveryDays(e.target.value)}
                 className="w-full bg-black/50 border border-white/10 p-3 rounded-sm text-white focus:border-primary focus:outline-none font-mono"
-              >
-                <option value="ONLINE">EN LINEA</option>
-                <option value="IN_PERSON">PRESENCIAL</option>
-              </select>
+                required
+              />
             </div>
           </div>
 

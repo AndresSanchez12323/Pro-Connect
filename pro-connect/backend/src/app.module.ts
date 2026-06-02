@@ -8,6 +8,7 @@ import { ServicesModule } from './modules/services/services.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { User } from './modules/users/entities/user.entity';
 import { ProfessionalProfile } from './modules/professionals/entities/professional-profile.entity';
 import { Service } from './modules/services/entities/service.entity';
@@ -50,6 +51,7 @@ const asBool = (value: string | undefined, fallback: boolean): boolean => {
     ContractsModule,
     ChatModule,
     NotificationsModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

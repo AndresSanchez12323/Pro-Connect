@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { ArrowLeft, Play, Shield, Loader2 } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../../../lib/api';
-import { traducirModalidad } from '../../../lib/i18n';
 
 export default function ClientServiceCheckout() {
   const navigate = useNavigate();
@@ -19,7 +18,7 @@ export default function ClientServiceCheckout() {
       serviceName: searchParams.get('serviceName') ?? 'Servicio',
       specialty: searchParams.get('specialty') ?? 'Especialidad',
       price: Number(searchParams.get('price') ?? 0),
-      mode: (searchParams.get('mode') ?? 'ONLINE') as 'ONLINE' | 'IN_PERSON',
+      deliveryDays: Number(searchParams.get('deliveryDays') ?? 3),
     };
   }, [searchParams]);
 
@@ -37,6 +36,8 @@ export default function ClientServiceCheckout() {
         professionalId: data.professionalId,
         serviceId: data.serviceId,
         scheduledAt: new Date(scheduledAt).toISOString(),
+        price: Math.max(1, Math.round(data.price || 1)),
+        terms: `Solicitud para ${data.serviceName}. Fecha acordada: ${new Date(scheduledAt).toLocaleString()}. El alcance final puede ajustarse por ambas partes antes de firmar.`,
       });
       navigate(`/dashboard/client/messages?reservationId=${reservation.id}`);
     } catch (err: any) {
@@ -83,8 +84,8 @@ export default function ClientServiceCheckout() {
                 <span className="text-white text-right">{data.serviceName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Modalidad</span>
-                <span className="text-white text-right">{traducirModalidad(data.mode)}</span>
+                <span className="text-gray-400">Entrega estimada</span>
+                <span className="text-white text-right">{data.deliveryDays} dias</span>
               </div>
               <div className="flex justify-between pt-2 border-t border-white/5 mt-2">
                 <span className="text-blue-400 font-bold">TOTAL ESTIMADO</span>

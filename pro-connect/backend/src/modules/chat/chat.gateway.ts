@@ -27,6 +27,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection {
     return { ok: true };
   }
 
+  @SubscribeMessage('joinReservationRoom')
+  handleJoinReservationRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { reservationId: string },
+  ): { ok: boolean } {
+    client.join(payload.reservationId);
+    return { ok: true };
+  }
+
   pushMessage(contractId: string, message: ChatMessage): void {
     this.server.to(contractId).emit('chatMessage', message);
   }

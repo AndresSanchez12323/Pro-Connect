@@ -10,15 +10,12 @@
     "preview": "npx vite preview"
   },
   "dependencies": {
-    "@nestjs/typeorm": "^11.0.0",
     "@tailwindcss/postcss": "^4.2.2",
     "axios": "^1.13.6",
-    "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.2",
-    "socket.io-client": "^4.8.3",
-    "typeorm": "^0.3.28"
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

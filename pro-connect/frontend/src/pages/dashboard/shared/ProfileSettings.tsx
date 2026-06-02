@@ -19,8 +19,8 @@ export default function ProfileSettings() {
     setError('');
 
     try {
-      const { data } = await api.patch('/auth/me', { fullName });
-      saveSession(data);
+      const { data } = await api.patch('/users/me', { fullName });
+      saveSession({ ...session, user: { ...session.user, ...data } });
       setSaved(true);
       setTimeout(() => setSaved(false), 1500);
     } catch (err: any) {

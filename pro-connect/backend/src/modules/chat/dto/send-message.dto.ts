@@ -1,8 +1,13 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class SendMessageDto {
+  @IsOptional()
   @IsUUID()
-  contractId: string;
+  contractId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  reservationId?: string;
 
   @IsString()
   @IsNotEmpty()

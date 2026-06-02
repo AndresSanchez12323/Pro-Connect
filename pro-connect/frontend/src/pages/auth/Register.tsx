@@ -45,8 +45,7 @@ export default function Register() {
         nationalId: nationalId || undefined,
         phone: phone || undefined,
         role: role === 'professional' ? 'PROFESSIONAL' : 'USER',
-        specialty: role === 'professional' ? specialty || 'Generalista' : undefined,
-        experience: role === 'professional' ? 0 : undefined,
+        headline: role === 'professional' ? specialty || 'Especialista en HTML y CSS' : undefined,
       };
 
       const { data } = await api.post('/auth/register', payload);
@@ -157,7 +156,7 @@ export default function Register() {
               <input
                 type="password"
                 required
-                minLength={6}
+                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-black/50 border border-white/10 rounded-sm p-3 text-white focus:border-primary focus:ring-1 focus:ring-primary/50 outline-none transition-all text-sm font-mono"
@@ -203,7 +202,7 @@ export default function Register() {
                   value={specialty}
                   onChange={(e) => setSpecialty(e.target.value)}
                   className="w-full bg-black/50 border border-white/10 rounded-sm p-3 text-white focus:border-primary focus:ring-1 focus:ring-primary/50 outline-none transition-all text-sm font-mono"
-                  placeholder="Ej: Desarrollo Backend"
+                  placeholder="Ej: Maquetacion responsive con HTML y CSS"
                 />
               </div>
             )}

@@ -1,3 +1,7 @@
 packages:
   - "pro-connect/backend"
   - "pro-connect/frontend"
+allowBuilds:
+  '@nestjs/core': true
+  esbuild: true
+  unrs-resolver: true

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { RequestUser } from '../../common/types/request-user';
+import type { RequestUser } from '../../common/types/request-user';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -9,6 +9,12 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('mine')
+  listMine(@CurrentUser() user: RequestUser) {
+    return this.servicesService.listMine(user.id);
+  }
 
   @Get()
   listByProfessional(@Query('professionalId') professionalId?: string) {
