@@ -79,15 +79,15 @@ export default function Register() {
 
           <h2 className="text-3xl font-bold text-white mb-6 font-mono leading-tight">
             UNETE A LA <br />
-            <span className="text-primary">RED PROFESIONAL</span>
+            <span className="text-primary">RED DE PROGRAMADORES</span>
           </h2>
 
           <div className="space-y-6">
             {[
-              'Cuenta real persistida en base de datos.',
-              'Contrataciones y mensajes por usuario.',
-              'Panel personalizado por rol.',
-              'Flujo completo cliente-profesional.',
+              'Encuentra expertos en HTML y CSS.',
+              'Contrata desarrolladores frontend.',
+              'Panel para publicar tus servicios de maquetación.',
+              'Flujo seguro para proyectos web.',
             ].map((item, idx) => (
               <div key={idx} className="flex items-center gap-3 text-gray-400 text-sm">
                 <CheckCircle2 className="w-5 h-5 text-green-500/50" />
@@ -113,7 +113,7 @@ export default function Register() {
               onClick={() => setRole('professional')}
               className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold font-mono transition-all rounded-sm ${role === 'professional' ? 'bg-primary text-black shadow-lg shadow-green-500/20' : 'text-gray-500 hover:text-white'}`}
             >
-              <Briefcase className="w-4 h-4" /> PROFESIONAL
+              <Briefcase className="w-4 h-4" /> PROGRAMADOR
             </button>
           </div>
 

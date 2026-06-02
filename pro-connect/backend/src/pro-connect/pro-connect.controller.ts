@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Headers, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
-import { CreateAvailabilityDto, CreateProfessionalProfileDto, CreateReservationDto, CreateReviewDto, CreateServiceDto, LoginDto, OpenChatDto, RegisterDto, RequestPasswordRecoveryDto, RescheduleReservationDto, ResetPasswordDto, RespondReservationDto, SendMessageDto, UpdateMeDto, UpdateProfessionalProfileDto } from './dto/pro-connect.dto';
+import { Body, Controller, Delete, Get, Headers, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { CreateAvailabilityDto, CreateProfessionalProfileDto, CreateReservationDto, CreateReviewDto, CreateServiceDto, UpdateServiceDto, LoginDto, OpenChatDto, RegisterDto, RequestPasswordRecoveryDto, RescheduleReservationDto, ResetPasswordDto, RespondReservationDto, SendMessageDto, UpdateMeDto, UpdateProfessionalProfileDto } from './dto/pro-connect.dto';
 import { ProConnectFacade } from './pro-connect.facade';
 
 @Controller()
@@ -89,6 +89,23 @@ export class ProConnectController {
   @Post('services')
   createService(@Headers('x-user-id') userId: string, @Body() dto: CreateServiceDto) {
     return this.facade.createService(userId, dto);
+  }
+
+  @Patch('services/:serviceId')
+  updateService(
+    @Headers('x-user-id') userId: string,
+    @Param('serviceId', ParseUUIDPipe) serviceId: string,
+    @Body() dto: UpdateServiceDto,
+  ) {
+    return this.facade.updateService(userId, serviceId, dto);
+  }
+
+  @Delete('services/:serviceId')
+  deleteService(
+    @Headers('x-user-id') userId: string,
+    @Param('serviceId', ParseUUIDPipe) serviceId: string,
+  ) {
+    return this.facade.deleteService(userId, serviceId);
   }
 
   @Post('availability')

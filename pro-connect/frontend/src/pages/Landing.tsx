@@ -33,20 +33,20 @@ export default function Landing() {
             </div>
             <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black tracking-tighter leading-tight">
               CONECTA CON <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600 text-shadow-neon">TALENTO DE ÉLITE</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600 text-shadow-neon">MAESTROS DEL CÓDIGO</span>
             </h1>
             <p className="text-base sm:text-xl text-gray-400 max-w-lg leading-relaxed font-light">
-              La red neuronal para profesionales de próxima generación. Contrata expertos de primer nivel o monetiza tus habilidades en un ecosistema descentralizado.
+              La plataforma exclusiva para programadores Web. Contrata expertos en HTML y CSS de primer nivel o monetiza tus habilidades de maquetación web.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
                <Link to="/register?role=client" className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-primary text-black font-bold rounded-sm flex items-center justify-center gap-2 hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(0,255,21,0.4)] text-sm sm:text-base">
                  <Zap className="w-5 h-5 fill-black" />
-                 CONTRATAR EXPERTOS
+                 CONTRATAR DEVS
                </Link>
                <Link to="/register?role=professional" className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-transparent border border-white/20 text-white font-bold rounded-sm flex items-center justify-center gap-2 hover:bg-white/5 hover:border-white/40 transition-all text-sm sm:text-base">
                  <Briefcase className="w-5 h-5 text-primary" />
-                 OFRECER SERVICIOS
+                 PROGRAMAR
                </Link>
             </div>
           </div>
