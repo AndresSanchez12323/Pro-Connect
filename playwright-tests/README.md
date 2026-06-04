@@ -12,14 +12,15 @@ npm install
 npm run install:browsers
 ```
 
-Antes de correr las pruebas, levanta la base de datos y la app:
+Antes de correr las pruebas, levanta la base de datos y carga los datos de prueba:
 
 ```powershell
 cd C:\Users\edwin_ib91qce\Desktop\ProConnect\Pro-Connect
 docker compose -f pro-connect/docker-compose.yml up -d
 pnpm run seed
-pnpm run start:dev
 ```
+
+Playwright reutiliza la app si ya esta abierta. Si no lo esta, intenta levantar frontend y backend con `pnpm run start:dev`.
 
 ## Ejecutar pruebas
 
@@ -47,7 +48,7 @@ npm run report
 Puedes cambiar las URLs o usuarios con variables de entorno:
 
 ```powershell
-$env:E2E_BASE_URL="http://localhost:5173"
+$env:E2E_BASE_URL="http://localhost:4000"
 $env:E2E_API_URL="http://localhost:3002/api"
 $env:E2E_CLIENT_EMAIL="camila.user@proconnect.dev"
 $env:E2E_PRO_EMAIL="diego.pro@proconnect.dev"

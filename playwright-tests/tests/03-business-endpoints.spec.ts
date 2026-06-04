@@ -8,7 +8,7 @@ test('reputacion responde con promedio y cantidad', async ({ request }) => {
   const response = await request.get(`${apiURL}/reputation/${professionalSession.profile?.id}`);
 
   expect(response.ok()).toBeTruthy();
-  await expect(response).toHaveJSON({
+  expect(await response.json()).toEqual({
     average: expect.any(Number),
     count: expect.any(Number),
   });

@@ -15,7 +15,7 @@ test('un cliente autenticado entra a su panel', async ({ page, request }) => {
   await prepareSession(page, session);
 
   await page.goto('/dashboard/client/overview');
-  await expect(page.getByText(session.user.fullName)).toBeVisible();
+  await expect(page.getByRole('heading', { name: `Hola, ${session.user.fullName}` })).toBeVisible();
   await expect(page.getByRole('link', { name: /explorar servicios/i })).toBeVisible();
 });
 
@@ -24,6 +24,6 @@ test('un profesional autenticado entra a su panel', async ({ page, request }) =>
   await prepareSession(page, session);
 
   await page.goto('/dashboard/professional/overview');
-  await expect(page.getByText(session.user.fullName)).toBeVisible();
+  await expect(page.getByRole('heading', { name: `Panel profesional de ${session.user.fullName}` })).toBeVisible();
   await expect(page.getByRole('link', { name: /nuevo servicio/i })).toBeVisible();
 });

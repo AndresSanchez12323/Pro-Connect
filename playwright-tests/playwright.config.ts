@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5173';
+const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:4000';
 
 export default defineConfig({
   testDir: './tests',
@@ -21,6 +21,13 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+  },
+  webServer: {
+    command: 'pnpm run start:dev',
+    cwd: '..',
+    url: baseURL,
+    reuseExistingServer: true,
+    timeout: 120_000,
   },
   projects: [
     {

@@ -22,9 +22,9 @@ El alcance del equipo es 100% local.
 
 ## 2. Stack y puertos locales
 
-- Frontend React + Vite: http://localhost:5173
+- Frontend React + Vite: http://localhost:4000
 - Backend NestJS: http://localhost:3002/api
-- Health backend: http://localhost:3002/api/health
+- Validacion backend: iniciar sesion contra http://localhost:3002/api/auth/login
 - PostgreSQL en Docker: localhost:5434
 
 ## 3. Software que debe instalar cada integrante
@@ -77,7 +77,7 @@ Backend:
 
     NODE_ENV=development
     PORT=3002
-    FRONTEND_URL=http://localhost:5173
+    FRONTEND_URL=http://localhost:4000
     DB_SSL=false
     DB_HOST=localhost
     DB_PORT=5434
@@ -115,8 +115,8 @@ Esto levanta backend y frontend juntos.
 
 Checklist de arranque correcto:
 
-- http://localhost:5173 abre la app
-- http://localhost:3002/api/health responde status ok
+- http://localhost:4000 abre la app
+- http://localhost:3002/api/auth/login responde al iniciar sesion con usuarios del seed
 - no hay errores fatales en consola de backend o frontend
 
 ## 8. Uso de TablePlus para revisar la base local
