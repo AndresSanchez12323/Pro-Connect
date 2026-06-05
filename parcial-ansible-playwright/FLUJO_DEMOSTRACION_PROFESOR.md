@@ -158,3 +158,29 @@ La practica integra tres elementos:
 2. Automatizacion: Ansible por SSH desde el PC local.
 3. Validacion funcional: Playwright contra la aplicacion web remota.
 ```
+
+## Errores comunes
+
+Si Playwright falla con `401` al iniciar sesion:
+
+1. Revisar que el puerto `3002` este en `Public` en la pestana `Ports` de Codespaces.
+2. Probar en navegador:
+
+```text
+https://TU-CODESPACE-3002.app.github.dev/api/health
+```
+
+3. Confirmar que `E2E_API_URL` termina en `/api`:
+
+```bash
+export E2E_API_URL='https://TU-CODESPACE-3002.app.github.dev/api'
+```
+
+4. Volver a ejecutar el seed desde Codespaces:
+
+```bash
+cd /workspaces/Pro-Connect
+export DATABASE_URL='postgresql://USUARIO:PASSWORD@HOST/neondb?sslmode=require&channel_binding=require'
+cd infra/codespaces/ansible
+ansible-playbook -i inventory.ini playbook.yml
+```

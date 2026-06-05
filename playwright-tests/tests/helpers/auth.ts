@@ -17,7 +17,14 @@ export interface LoginSession {
   } | null;
 }
 
-export const apiURL = process.env.E2E_API_URL ?? 'http://localhost:3002/api';
+function normalizeApiURL(value: string) {
+  const withoutTrailingSlash = value.replace(/\/+$/, '');
+  return withoutTrailingSlash.endsWith('/api')
+    ? withoutTrailingSlash
+    : `${withoutTrailingSlash}/api`;
+}
+
+export const apiURL = normalizeApiURL(process.env.E2E_API_URL ?? 'http://localhost:3002/api');
 
 export const credentials = {
   clientEmail: process.env.E2E_CLIENT_EMAIL ?? 'camila.user@proconnect.dev',
