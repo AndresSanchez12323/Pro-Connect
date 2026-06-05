@@ -29,3 +29,6 @@ respaldos_antiguos/
 
 # Generated artifacts
 *.tsbuildinfo
+**/playwright-report/
+**/test-results/
+**/*.webm
