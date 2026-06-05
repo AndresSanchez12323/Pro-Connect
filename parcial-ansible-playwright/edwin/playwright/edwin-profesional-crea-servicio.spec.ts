@@ -1,6 +1,6 @@
 import { expect, test } from '../../../playwright-tests/node_modules/@playwright/test';
 import { readFileSync } from 'node:fs';
-import path from 'node:path';
+import { resolve } from 'node:path';
 import { credentials, loginByApi, prepareSession } from '../../../playwright-tests/tests/helpers/auth';
 
 interface EdwinArtifact {
@@ -15,7 +15,7 @@ interface EdwinArtifact {
   };
 }
 
-const artifactPath = path.resolve(__dirname, '../artifacts/edwin-service-plan.json');
+const artifactPath = resolve(__dirname, '../artifacts/edwin-service-plan.json');
 const artifact = JSON.parse(readFileSync(artifactPath, 'utf8')) as EdwinArtifact;
 
 test('Edwin publica un servicio preparado por Ansible', async ({ page, request }) => {

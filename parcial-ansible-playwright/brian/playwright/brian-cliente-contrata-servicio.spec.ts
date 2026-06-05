@@ -1,6 +1,6 @@
 import { expect, test } from '../../../playwright-tests/node_modules/@playwright/test';
 import { readFileSync } from 'node:fs';
-import path from 'node:path';
+import { resolve } from 'node:path';
 import { apiURL, credentials, loginByApi, prepareSession } from '../../../playwright-tests/tests/helpers/auth';
 
 interface BrianArtifact {
@@ -19,7 +19,7 @@ interface BrianArtifact {
   };
 }
 
-const artifactPath = path.resolve(__dirname, '../artifacts/brian-hiring-plan.json');
+const artifactPath = resolve(__dirname, '../artifacts/brian-hiring-plan.json');
 const artifact = JSON.parse(readFileSync(artifactPath, 'utf8')) as BrianArtifact;
 
 function toDatetimeLocalValue(date: Date) {
