@@ -1,4 +1,5 @@
 import { expect, test } from '../../../playwright-tests/node_modules/@playwright/test';
+import type { Page } from '../../../playwright-tests/node_modules/@playwright/test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { apiURL, credentials, loginByApi, prepareSession } from '../../../playwright-tests/tests/helpers/auth';
@@ -21,6 +22,14 @@ interface BrianArtifact {
 
 const artifactPath = resolve(__dirname, '../artifacts/brian-hiring-plan.json');
 const artifact = JSON.parse(readFileSync(artifactPath, 'utf8')) as BrianArtifact;
+
+async function continueThroughCodespacesWarning(page: Page) {
+  const continueButton = page.getByRole('button', { name: /^continue$/i });
+  if (await continueButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await continueButton.click();
+    await page.waitForLoadState('domcontentloaded');
+  }
+}
 
 function toDatetimeLocalValue(date: Date) {
   const pad = (value: number) => String(value).padStart(2, '0');
@@ -62,6 +71,7 @@ test('Brian encuentra una oferta preparada por Ansible y la contrata', async ({ 
     await prepareSession(page, clientSession);
 
     await page.goto('/dashboard/client/network');
+    await continueThroughCodespacesWarning(page);
     await expect(page.getByRole('heading', { name: /red de servicios/i })).toBeVisible();
 
     await page.getByPlaceholder(/buscar por servicio/i).fill(artifact.hiring.searchTerm);

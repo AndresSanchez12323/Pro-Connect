@@ -184,3 +184,5 @@ export DATABASE_URL='postgresql://USUARIO:PASSWORD@HOST/neondb?sslmode=require&c
 cd infra/codespaces/ansible
 ansible-playbook -i inventory.ini playbook.yml
 ```
+
+Si Playwright queda en la pantalla de GitHub que dice `You are about to access a development port`, la prueba ya presiona `Continue` automaticamente. Si ocurre manualmente en el navegador, solo presionar `Continue` una vez.
