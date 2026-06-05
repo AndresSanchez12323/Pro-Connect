@@ -7,6 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const frontendUrl = configService.get<string>('FRONTEND_URL');
+  const allowedOrigins = frontendUrl
+    ?.split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
@@ -16,9 +20,11 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  app.enableCors({ origin: frontendUrl ?? '*' });
+  app.enableCors({
+    origin: allowedOrigins && allowedOrigins.length > 0 ? allowedOrigins : '*',
+    credentials: true,
+  });
 
-  // Initialize passport
   app.useGlobalGuards();
   await app.listen(Number(configService.get('PORT') ?? 3002));
 }

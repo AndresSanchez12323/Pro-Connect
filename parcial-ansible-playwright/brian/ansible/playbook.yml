@@ -1,0 +1,59 @@
+---
+- name: Preparar escenario de Brian como cliente
+  hosts: proconnect_remote
+  gather_facts: false
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Validar conexion SSH con el servidor remoto
+      ansible.builtin.ping:
+
+    - name: Crear carpeta remota de evidencias para Brian
+      ansible.builtin.file:
+        path: "{{ remote_artifact_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Obtener fecha desde el servidor remoto
+      ansible.builtin.command: date +%Y%m%d%H%M%S
+      register: remote_timestamp
+      changed_when: false
+
+    - name: Generar oferta en el servidor remoto que sera contratada por Playwright
+      ansible.builtin.copy:
+        dest: "{{ remote_artifact_file }}"
+        mode: "0644"
+        content: |
+          {
+            "student": "{{ student_name }}",
+            "role": "{{ student_role }}",
+            "remoteHost": "{{ inventory_hostname }}",
+            "flow": "client_hires_service",
+            "service": {
+              "title": "{{ service.title }} {{ remote_timestamp.stdout }}",
+              "description": "{{ service.description }}",
+              "price": {{ service.price }},
+              "deliveryDays": {{ service.deliveryDays }}
+            },
+            "hiring": {
+              "searchTerm": "{{ hiring.searchTerm }}",
+              "scheduledOffsetDays": {{ hiring.scheduledOffsetDays }}
+            }
+          }
+
+    - name: Crear carpeta local donde Playwright leera la evidencia
+      ansible.builtin.file:
+        path: "{{ local_artifact_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Descargar evidencia remota para que Playwright la consuma
+      ansible.builtin.fetch:
+        src: "{{ remote_artifact_file }}"
+        dest: "{{ artifact_file }}"
+        flat: true
+
+    - name: Mostrar resumen de la tarea preparada
+      ansible.builtin.debug:
+        msg: "Brian genero la oferta en {{ remote_artifact_file }} dentro del servidor remoto y Playwright usara {{ artifact_file }} para validarla."

@@ -1,0 +1,12 @@
+student_name: Edwin
+student_role: profesional
+artifact_file: ../artifacts/edwin-service-plan.json
+local_artifact_dir: ../artifacts
+remote_artifact_dir: /tmp/proconnect-parcial/edwin
+remote_artifact_file: /tmp/proconnect-parcial/edwin/edwin-service-plan.json
+service:
+  title: Servicio Edwin Ansible Playwright
+  description: Servicio publicado por el profesional Edwin para demostrar la integracion entre Ansible y Playwright.
+  price: 155000
+  deliveryDays: 4
+  expectedPanel: professional

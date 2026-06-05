@@ -1,0 +1,70 @@
+---
+- name: Preparar ProConnect en GitHub Codespaces
+  hosts: codespace
+  gather_facts: false
+
+  vars:
+    codespace_name: "{{ lookup('env', 'CODESPACE_NAME') }}"
+    codespace_domain: "{{ lookup('env', 'GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN') | default('app.github.dev', true) }}"
+    public_base_url: "{{ lookup('env', 'E2E_BASE_URL') | default('https://' ~ codespace_name ~ '-4000.' ~ codespace_domain, true) }}"
+    api_base_url: "{{ lookup('env', 'E2E_API_URL') | default('https://' ~ codespace_name ~ '-3002.' ~ codespace_domain ~ '/api', true) }}"
+    database_url: "{{ lookup('env', 'DATABASE_URL') }}"
+    run_seed: "{{ lookup('env', 'RUN_SEED') | default('true', true) }}"
+
+  tasks:
+    - name: Validar que estamos dentro de Codespaces
+      ansible.builtin.assert:
+        that:
+          - codespace_name | length > 0
+        fail_msg: "Este playbook esta pensado para GitHub Codespaces. No se encontro CODESPACE_NAME."
+
+    - name: Validar DATABASE_URL de Neon
+      ansible.builtin.assert:
+        that:
+          - database_url | length > 0
+        fail_msg: "Configura DATABASE_URL como secret/env de Codespaces antes de ejecutar Ansible."
+
+    - name: Crear .env del backend apuntando a Neon y al frontend publico
+      ansible.builtin.copy:
+        dest: ../../../pro-connect/backend/.env
+        mode: "0600"
+        content: |
+          NODE_ENV=development
+          PORT=3002
+          FRONTEND_URL={{ public_base_url }}
+          DATABASE_URL={{ database_url }}
+          DB_SSL=true
+          DB_SYNCHRONIZE=true
+          DB_LOGGING=false
+
+    - name: Crear .env del frontend apuntando a API publica del Codespace
+      ansible.builtin.copy:
+        dest: ../../../pro-connect/frontend/.env
+        mode: "0644"
+        content: |
+          VITE_API_URL={{ api_base_url }}
+
+    - name: Instalar dependencias del monorepo
+      ansible.builtin.command: pnpm install --frozen-lockfile
+      args:
+        chdir: ../../..
+
+    - name: Instalar dependencias de Playwright
+      ansible.builtin.command: npm ci
+      args:
+        chdir: ../../../playwright-tests
+
+    - name: Ejecutar seed de datos de demostracion
+      ansible.builtin.command: pnpm run seed
+      args:
+        chdir: ../../..
+      when: run_seed | bool
+
+    - name: Mostrar comandos para levantar y probar
+      ansible.builtin.debug:
+        msg:
+          - "Frontend publico: {{ public_base_url }}"
+          - "Backend API publica: {{ api_base_url }}"
+          - "Levantar app: pnpm run start:dev"
+          - "Playwright: E2E_BASE_URL={{ public_base_url }} E2E_API_URL={{ api_base_url }} npx playwright test"
+

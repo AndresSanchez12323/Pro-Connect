@@ -1,6 +1,10 @@
 {
   "name": "parcial-proyecto-construccion-software",
   "private": true,
+  "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "setup:local": "pnpm run install:all",
     "install:all": "pnpm -C pro-connect/backend install && pnpm -C pro-connect/frontend install",

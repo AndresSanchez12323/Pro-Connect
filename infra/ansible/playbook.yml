@@ -1,0 +1,172 @@
+---
+- name: Desplegar ProConnect completo en servidor remoto
+  hosts: proconnect
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Validar que DATABASE_URL fue configurado
+      ansible.builtin.assert:
+        that:
+          - database_url | length > 0
+        fail_msg: "Debes pasar database_url con la cadena de Neon. Ejemplo: --extra-vars 'database_url=postgresql://...'"
+
+    - name: Validar conexion con servidor remoto
+      ansible.builtin.ping:
+
+  tasks:
+    - name: Instalar paquetes base
+      ansible.builtin.apt:
+        name:
+          - curl
+          - ca-certificates
+          - gnupg
+          - nginx
+          - rsync
+        state: present
+        update_cache: true
+
+    - name: Instalar repositorio NodeSource Node 20
+      ansible.builtin.shell: |
+        set -e
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+      args:
+        creates: /etc/apt/sources.list.d/nodesource.list
+
+    - name: Instalar Node.js
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+        update_cache: true
+
+    - name: Habilitar corepack
+      ansible.builtin.command: corepack enable
+      changed_when: false
+
+    - name: Preparar pnpm 11.5.1
+      ansible.builtin.command: corepack prepare pnpm@11.5.1 --activate
+      changed_when: false
+
+    - name: Instalar PM2 globalmente
+      ansible.builtin.command: npm install -g pm2
+      changed_when: false
+
+    - name: Crear directorio de aplicacion
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+
+    - name: Subir proyecto actual al servidor remoto
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../../"
+        dest: "{{ app_dir }}/"
+        delete: true
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=node_modules"
+          - "--exclude=pro-connect/backend/node_modules"
+          - "--exclude=pro-connect/frontend/node_modules"
+          - "--exclude=playwright-tests/node_modules"
+          - "--exclude=pro-connect/backend/dist"
+          - "--exclude=pro-connect/frontend/dist"
+          - "--exclude=playwright-tests/playwright-report"
+          - "--exclude=playwright-tests/test-results"
+      become: false
+
+    - name: Crear archivo .env del backend
+      ansible.builtin.template:
+        src: backend.env.j2
+        dest: "{{ app_dir }}/pro-connect/backend/.env"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0600"
+
+    - name: Crear archivo .env.production del frontend
+      ansible.builtin.template:
+        src: frontend.env.production.j2
+        dest: "{{ app_dir }}/pro-connect/frontend/.env.production"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+
+    - name: Instalar dependencias del monorepo
+      ansible.builtin.command: pnpm install --frozen-lockfile
+      args:
+        chdir: "{{ app_dir }}"
+      become: false
+
+    - name: Compilar backend y frontend
+      ansible.builtin.command: pnpm run build
+      args:
+        chdir: "{{ app_dir }}"
+      become: false
+
+    - name: Ejecutar seed opcional para datos de prueba
+      ansible.builtin.command: pnpm -C pro-connect/backend run seed
+      args:
+        chdir: "{{ app_dir }}"
+      become: false
+      when: run_seed | bool
+
+    - name: Configurar Nginx para ProConnect
+      ansible.builtin.template:
+        src: nginx-proconnect.conf.j2
+        dest: /etc/nginx/sites-available/proconnect
+        mode: "0644"
+      notify: Recargar nginx
+
+    - name: Activar sitio de Nginx
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/proconnect
+        dest: /etc/nginx/sites-enabled/proconnect
+        state: link
+      notify: Recargar nginx
+
+    - name: Desactivar sitio default de Nginx
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Recargar nginx
+
+    - name: Validar configuracion de Nginx
+      ansible.builtin.command: nginx -t
+      changed_when: false
+
+    - name: Levantar backend con PM2
+      ansible.builtin.shell: |
+        set -e
+        pm2 delete {{ app_name }}-backend || true
+        pm2 start dist/main.js --name {{ app_name }}-backend
+        pm2 save
+      args:
+        chdir: "{{ app_dir }}/pro-connect/backend"
+      become: false
+
+    - name: Configurar PM2 para reinicio al arrancar servidor
+      ansible.builtin.command: pm2 startup systemd -u {{ ansible_user }} --hp /home/{{ ansible_user }}
+      register: pm2_startup
+      changed_when: "'already' not in pm2_startup.stdout"
+
+    - name: Verificar healthcheck remoto
+      ansible.builtin.uri:
+        url: "http://127.0.0.1/api/health"
+        return_content: true
+        status_code: 200
+      register: healthcheck
+
+    - name: Mostrar URL de la aplicacion
+      ansible.builtin.debug:
+        msg:
+          - "Frontend: {{ public_base_url }}"
+          - "Backend health: {{ public_base_url }}/api/health"
+          - "Playwright E2E_BASE_URL={{ public_base_url }}"
+          - "Playwright E2E_API_URL={{ api_base_url }}"
+
+  handlers:
+    - name: Recargar nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

@@ -19,6 +19,7 @@ import { ChatConversation, ChatMessage } from './modules/chat/entities/chat.enti
 import { Notification } from './modules/notifications/entities/notification.entity';
 import { Invoice } from './modules/invoices/entities/invoice.entity';
 import { Review } from './modules/reviews/entities/review.entity';
+import { HealthController } from './health.controller';
 
 const asBool = (value: string | undefined, fallback: boolean): boolean => {
   if (value == null) return fallback;
@@ -59,5 +60,6 @@ const asBool = (value: string | undefined, fallback: boolean): boolean => {
     InvoicesModule,
     ReviewsModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}

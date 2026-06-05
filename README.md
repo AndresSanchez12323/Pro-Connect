@@ -46,6 +46,20 @@ Notas:
 - Backend: https://proconnect-backend-6sox.onrender.com
 - Healthcheck: https://proconnect-backend-6sox.onrender.com/api/health
 
+## Guia de deploy
+
+Para desplegar con Vercel, Render y Neon, ver:
+
+- docs/DEPLOY_VERCEL_RENDER_NEON.md
+
+Para la practica de Ansible + Playwright con servidor remoto por SSH, ver:
+
+- infra/ansible/README.md
+
+Para hacer la practica gratis con GitHub Codespaces, ver:
+
+- infra/codespaces/README.md
+
 ## Funcionalidades principales
 
 - Registro e inicio de sesion para cliente y profesional.

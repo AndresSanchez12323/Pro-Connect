@@ -1,0 +1,14 @@
+student_name: Brian
+student_role: cliente
+artifact_file: ../artifacts/brian-hiring-plan.json
+local_artifact_dir: ../artifacts
+remote_artifact_dir: /tmp/proconnect-parcial/brian
+remote_artifact_file: /tmp/proconnect-parcial/brian/brian-hiring-plan.json
+service:
+  title: Oferta Brian Ansible Playwright
+  description: Oferta preparada para que Brian demuestre el flujo de cliente que busca y contrata un servicio.
+  price: 98000
+  deliveryDays: 2
+hiring:
+  searchTerm: Oferta Brian
+  scheduledOffsetDays: 3

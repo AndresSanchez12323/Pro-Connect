@@ -1,0 +1,20 @@
+app_name: proconnect
+app_dir: /opt/proconnect
+backend_port: 3002
+frontend_build_dir: "{{ app_dir }}/pro-connect/frontend/dist"
+
+# Cambiar por dominio real si tienen DNS. Si no, usar http://IP_DEL_SERVIDOR.
+public_base_url: "http://TU_IP_O_DOMINIO"
+api_base_url: "{{ public_base_url }}/api"
+
+# Pasar DATABASE_URL por --extra-vars o por un archivo local no versionado.
+# Ejemplo:
+# ansible-playbook -i inventory.ini playbook.yml --extra-vars "database_url=postgresql://..."
+database_url: ""
+db_ssl: "true"
+db_synchronize: "true"
+db_logging: "false"
+
+# Ejecutar seed solo cuando quieran reiniciar datos de demostracion.
+run_seed: false
+

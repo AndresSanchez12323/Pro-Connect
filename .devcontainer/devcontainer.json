@@ -1,0 +1,25 @@
+{
+  "name": "ProConnect Ansible Playwright",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
+  "forwardPorts": [3002, 4000],
+  "portsAttributes": {
+    "3002": {
+      "label": "ProConnect API",
+      "onAutoForward": "notify"
+    },
+    "4000": {
+      "label": "ProConnect Frontend",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-playwright.playwright",
+        "redhat.ansible"
+      ]
+    }
+  }
+}
+

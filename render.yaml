@@ -2,12 +2,14 @@ services:
   - type: web
     name: proconnect-backend
     runtime: node
-    rootDir: pro-connect/backend
+    rootDir: .
     plan: free
-    buildCommand: npm ci --include=dev && npm run build
-    startCommand: npm run start:prod
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm run build:backend
+    startCommand: corepack enable && pnpm -C pro-connect/backend run start:prod
     healthCheckPath: /api/health
     envVars:
+      - key: NODE_VERSION
+        value: "20.19.0"
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
