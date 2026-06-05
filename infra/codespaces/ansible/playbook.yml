@@ -58,6 +58,10 @@
       ansible.builtin.command: pnpm run seed
       args:
         chdir: ../../..
+      environment:
+        DATABASE_URL: "{{ database_url }}"
+        DB_SSL: "true"
+        DB_LOGGING: "false"
       when: run_seed | bool
 
     - name: Mostrar comandos para levantar y probar
@@ -67,4 +71,3 @@
           - "Backend API publica: {{ api_base_url }}"
           - "Levantar app: pnpm run start:dev"
           - "Playwright: E2E_BASE_URL={{ public_base_url }} E2E_API_URL={{ api_base_url }} npx playwright test"
-

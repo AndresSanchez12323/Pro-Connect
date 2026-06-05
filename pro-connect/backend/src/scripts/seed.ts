@@ -10,16 +10,30 @@ import { Notification, NotificationType } from '../modules/notifications/entitie
 import { Invoice } from '../modules/invoices/entities/invoice.entity';
 import { Review } from '../modules/reviews/entities/review.entity';
 
+const asBool = (value: string | undefined, fallback: boolean): boolean => {
+  if (value == null) return fallback;
+  return value.toLowerCase() === 'true';
+};
+
 const appDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST ?? 'localhost',
-  port: Number(process.env.DB_PORT ?? 5434),
-  username: process.env.DB_USER ?? 'postgres',
-  password: process.env.DB_PASSWORD ?? 'postgres',
-  database: process.env.DB_NAME ?? 'proconnect',
+  ...(process.env.DATABASE_URL
+    ? {
+        url: process.env.DATABASE_URL,
+      }
+    : {
+        host: process.env.DB_HOST ?? 'localhost',
+        port: Number(process.env.DB_PORT ?? 5434),
+        username: process.env.DB_USER ?? 'postgres',
+        password: process.env.DB_PASSWORD ?? 'postgres',
+        database: process.env.DB_NAME ?? 'proconnect',
+      }),
+  ssl: asBool(process.env.DB_SSL, false)
+    ? { rejectUnauthorized: false }
+    : false,
   entities: [User, ProfessionalProfile, Service, Contract, ChatConversation, ChatMessage, Notification, Invoice, Review],
   synchronize: false,
-  logging: false,
+  logging: asBool(process.env.DB_LOGGING, false),
 });
 
 async function seed() {
