@@ -1,7 +1,7 @@
 {
   "name": "parcial-proyecto-construccion-software",
   "private": true,
-  "packageManager": "pnpm@11.5.1",
+  "packageManager": "pnpm@10.24.0",
   "engines": {
     "node": ">=20.19.0"
   },

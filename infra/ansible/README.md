@@ -5,7 +5,7 @@ Este playbook monta el proyecto completo en una VM Ubuntu remota para que la pra
 ## Que instala
 
 - Node.js 20
-- pnpm 11.5.1
+- pnpm 10.24.0
 - Nginx
 - PM2
 - Frontend React compilado y servido por Nginx

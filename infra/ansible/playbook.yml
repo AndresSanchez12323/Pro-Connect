@@ -43,8 +43,8 @@
       ansible.builtin.command: corepack enable
       changed_when: false
 
-    - name: Preparar pnpm 11.5.1
-      ansible.builtin.command: corepack prepare pnpm@11.5.1 --activate
+    - name: Preparar pnpm 10.24.0
+      ansible.builtin.command: corepack prepare pnpm@10.24.0 --activate
       changed_when: false
 
     - name: Instalar PM2 globalmente
