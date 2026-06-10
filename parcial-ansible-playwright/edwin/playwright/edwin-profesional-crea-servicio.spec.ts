@@ -45,5 +45,5 @@ test('Edwin publica un servicio preparado por Ansible', async ({ page, request }
   await page.getByRole('button', { name: /publicar servicio/i }).click();
 
   await expect(page).toHaveURL(/\/dashboard\/professional\/services/);
-  await expect(page.getByText(artifact.service.title)).toBeVisible();
+  await expect(page.locator('.minimal-card').filter({ hasText: artifact.service.title }).first()).toBeVisible();
 });
