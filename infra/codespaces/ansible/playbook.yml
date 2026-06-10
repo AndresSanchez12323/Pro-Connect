@@ -32,7 +32,7 @@
           NODE_ENV=development
           PORT=3002
           FRONTEND_URL={{ public_base_url }}
-          DATABASE_URL={{ database_url }}
+          DATABASE_URL="{{ database_url }}"
           DB_SSL=true
           DB_SYNCHRONIZE=true
           DB_LOGGING=false

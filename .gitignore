@@ -32,3 +32,4 @@ respaldos_antiguos/
 **/playwright-report/
 **/test-results/
 **/*.webm
+parcial-ansible-playwright/*/artifacts/*.json
